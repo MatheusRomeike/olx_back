@@ -49,17 +49,17 @@ namespace Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("GerarToken")]
+        [HttpPost("Logar")]
         [ProducesResponseType(typeof(StandardReturn<dynamic>), 200)]
         [ProducesResponseType(typeof(Exception), 400)]
         [ProducesResponseType(500)]
-        public Task<IActionResult> GerarToken([FromBody] LoginViewModel login)
+        public Task<IActionResult> Logar([FromBody] LoginViewModel login)
         {
             return Task.Run(() =>
             {
                 try
                 {
-                    return Ok(new StandardReturn<dynamic>(ReturnStatus.Ok, _loginService.GerarToken(login)));
+                    return Ok(new StandardReturn<dynamic>(ReturnStatus.Ok, _loginService.Logar(login)));
                 }
                 catch (Exception e)
                 {

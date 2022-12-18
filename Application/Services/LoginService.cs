@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Domain.Domain.Login;
 using Domain.Domain.Login.Contracts;
 using System.Net;
+using System.Net.Mail;
 
 namespace Application.Services
 {
@@ -40,7 +41,7 @@ namespace Application.Services
             return true;
         }
 
-        public string GerarToken(LoginViewModel login)
+        public string Logar(LoginViewModel login)
         {
             var usuario = _loginRepository.LoadFirstBy(x => x.Usuario == login.Usuario && x.Senha == login.Senha);
             if (usuario != null)
@@ -55,7 +56,7 @@ namespace Application.Services
                     .Builder();
                 return token.Value;
             }
-            return "Unauthorized";
+            throw new UnauthorizedAccessException("Unauthorized");
         }
         #endregion
     }

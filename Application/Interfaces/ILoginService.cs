@@ -22,6 +22,6 @@ namespace Application.Interfaces
         /// </summary>
         /// <param name="login"></param>
         /// <returns></returns>
-        string GerarToken(LoginViewModel login);
+        string Logar(LoginViewModel login);
     }
 }

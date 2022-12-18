@@ -1,5 +1,4 @@
 ﻿using Domain.Domain.Login;
-using Domain.Domain.Pessoa;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,7 +18,6 @@ namespace Application.Context
         #endregion
 
         #region Objetos
-        public DbSet<Pessoa> Pessoa { get; set; }
         public DbSet<Login> Login { get; set; }
         #endregion
 

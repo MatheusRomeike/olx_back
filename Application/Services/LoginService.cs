@@ -56,7 +56,7 @@ namespace Application.Services
                     .Builder();
                 return token.Value;
             }
-            throw new UnauthorizedAccessException("Unauthorized");
+            throw new UnauthorizedAccessException("Usuário e/ou senha incorretos.");
         }
         #endregion
     }

@@ -14,6 +14,7 @@ namespace Api.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LoginController : BaseController
     {
         #region Atributos

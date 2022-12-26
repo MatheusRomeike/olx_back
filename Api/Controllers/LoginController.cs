@@ -15,6 +15,7 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+
     public class LoginController : BaseController
     {
         #region Atributos
@@ -28,10 +29,31 @@ namespace Api.Controllers
         }
         #endregion
 
+        #region HttpGet
+        [HttpGet("VerificarLogin")]
+        [ProducesResponseType(typeof(StandardReturn<bool>), 200)]
+        [ProducesResponseType(typeof(Exception), 400)]
+        [ProducesResponseType(500)]
+        public Task<IActionResult> VerificarLogin()
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    return Ok(new StandardReturn<bool>(ReturnStatus.Ok, true));
+                }
+                catch (Exception e)
+                {
+                    return ResolveError(e);
+                }
+            });
+        }
+        #endregion
+
         #region HttpPost
         [AllowAnonymous]
         [HttpPost("AdicionarLogin")]
-        [ProducesResponseType(typeof(StandardReturn<dynamic>), 200)]
+        [ProducesResponseType(typeof(StandardReturn<bool>), 200)]
         [ProducesResponseType(typeof(Exception), 400)]
         [ProducesResponseType(500)]
         public Task<IActionResult> AdicionarLogin([FromBody] LoginViewModel login)
@@ -40,7 +62,7 @@ namespace Api.Controllers
             {
                 try
                 {
-                    return Ok(new StandardReturn<dynamic>(ReturnStatus.Ok, _loginService.AdicionarLogin(login)));
+                    return Ok(new StandardReturn<bool>(ReturnStatus.Ok, _loginService.AdicionarLogin(login)));
                 }
                 catch (Exception e)
                 {
@@ -51,7 +73,7 @@ namespace Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("Logar")]
-        [ProducesResponseType(typeof(StandardReturn<dynamic>), 200)]
+        [ProducesResponseType(typeof(StandardReturn<string>), 200)]
         [ProducesResponseType(typeof(Exception), 400)]
         [ProducesResponseType(500)]
         public Task<IActionResult> Logar([FromBody] LoginViewModel login)
@@ -60,7 +82,7 @@ namespace Api.Controllers
             {
                 try
                 {
-                    return Ok(new StandardReturn<dynamic>(ReturnStatus.Ok, _loginService.Logar(login)));
+                    return Ok(new StandardReturn<string>(ReturnStatus.Ok, _loginService.Logar(login)));
                 }
                 catch (Exception e)
                 {

@@ -1,6 +1,7 @@
 ﻿using Domain.Domain.Login;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,21 @@ namespace Application.Context
         #endregion
 
         #region Métodos
-        public string ObterStringConexao()
-        {
-            return "Data Source=MATHEUS;Initial Catalog=BaseApi;Integrated Security=True;MultipleActiveResultSets=True";
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ObterStringConexao());
+                var connectionString = new NpgsqlConnectionStringBuilder()
+                {
+                    Host = "localhost",
+                    Port = 5432,
+                    Database = "postgres",
+                    Username = "postgres",
+                    Password = "0911",
+                    Pooling = true
+                }.ToString();
+
+                optionsBuilder.UseNpgsql(connectionString);
                 base.OnConfiguring(optionsBuilder);
             }
         }

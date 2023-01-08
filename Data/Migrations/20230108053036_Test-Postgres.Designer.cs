@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.Migrations
 {
-    [DbContext(typeof(ContextBase))]
+    [DbContext(typeof(DataContext))]
     [Migration("20230108053036_Test-Postgres")]
     partial class TestPostgres
     {

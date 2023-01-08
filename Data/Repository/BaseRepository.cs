@@ -16,20 +16,20 @@ namespace Data.Repository
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         #region Atributos
-        private readonly DbContextOptions<ContextBase> Context;
+        private readonly DbContextOptions<DataContext> Context;
         #endregion
 
         #region Construtor
         public BaseRepository()
         {
-            Context = new DbContextOptions<ContextBase>();
+            Context = new DbContextOptions<DataContext>();
         }
         #endregion
 
         #region Métodos
         public virtual void Add(T objeto)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 context.Add(objeto);
                 context.SaveChanges();
@@ -38,7 +38,7 @@ namespace Data.Repository
 
         public void Add(IEnumerable<T> objetos)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 context.AddRange(objetos);
                 context.SaveChanges();
@@ -47,7 +47,7 @@ namespace Data.Repository
 
         public virtual IEnumerable<T> LoadAll()
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 return context.Set<T>().ToList();
             }
@@ -55,7 +55,7 @@ namespace Data.Repository
 
         public virtual void Update(T objeto)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 context.Update(objeto);
                 context.SaveChanges();
@@ -64,7 +64,7 @@ namespace Data.Repository
 
         public virtual void Delete(T objeto)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 context.Remove(objeto);
                 context.SaveChanges();
@@ -73,7 +73,7 @@ namespace Data.Repository
 
         public virtual T LoadById(int id)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 return context.Find<T>(id);
             }
@@ -81,7 +81,7 @@ namespace Data.Repository
 
         public virtual T LoadFirstBy(Expression<Func<T, bool>> predicate)
         {
-            using (var context = new ContextBase(Context))
+            using (var context = new DataContext(Context))
             {
                 return context.Set<T>().Where(predicate).FirstOrDefault();
             }

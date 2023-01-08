@@ -9,8 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 
+#region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+#endregion
+
+#region Envinroment
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,18 +28,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region ConfigServices
-var connectionString = new NpgsqlConnectionStringBuilder()
-{
-    Host = "localhost",
-    Port = 5432,
-    Database = "postgres",
-    Username = "postgres",
-    Password = "0911",
-    Pooling = true
-}.ToString();
+#region DbContext
+string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
-builder.Services.AddDbContext<ContextBase>(options =>
+builder.Services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(connectionString));
 #endregion
 
@@ -48,7 +47,7 @@ builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 #endregion
 
-#region JWT
+#region Token JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       .AddJwtBearer(option =>
       {

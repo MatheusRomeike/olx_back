@@ -1,13 +1,8 @@
 ﻿using Api.Models;
 using Application.Interfaces;
-using Domain.Domain.Login;
 using Domain.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace Api.Controllers
 {

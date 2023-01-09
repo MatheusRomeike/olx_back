@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -38,17 +39,44 @@ namespace Application.Interfaces
         T LoadById(int id);
 
         /// <summary>
-        /// Carregar uma lista de objetos
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> LoadAll();
-
-        /// <summary>
-        /// Carregar um objeto com base em uma expressão
+        /// Método responsável por carregar o primeiro baseado nas condiçoes passadas
         /// </summary>
         /// <param name="predicate"></param>
+        /// <param name="include"></param>
+        /// <param name="selector"></param>
         /// <returns></returns>
-        T LoadFirstBy(Expression<Func<T, bool>> predicate);
+        T? LoadFirstBy(
+            Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Expression<Func<T, T>>? selector = null);
+
+        /// <summary>
+        /// Método responsável por carregar o ultimo baseado nas condiçoes passadas
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="include"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        T? LoadLastBy(
+            Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            Expression<Func<T, T>>? selector = null);
+
+        /// <summary>
+        /// Método responsável por carregar todos baseados nas condiçoes passadas
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="include"></param>
+        /// <param name="limit"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        IEnumerable<T> LoadAll(
+            Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            int? limit = null,
+            Expression<Func<T, T>>? selector = null);
 
     }
 }

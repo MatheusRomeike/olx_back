@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Services;
 using Application.Token;
 using Data.Repository;
+using Domain.Domain.Dtos.AutoComplete.Contracts;
 using Domain.Domain.Login.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -39,10 +40,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 #region Service
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 #endregion
 
 #region Repository
-builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddTransient<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<IAutoCompleteRepository, AutoCompleteRepository>();
 #endregion
 
 #endregion

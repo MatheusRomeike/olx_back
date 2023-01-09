@@ -43,16 +43,16 @@ namespace Application.Services
 
         public string Logar(LoginViewModel login)
         {
-            var usuario = _loginRepository.LoadFirstBy(x => x.Usuario == login.Usuario && x.Senha == login.Senha);
+            var usuario = _loginRepository.LoadFirstBy(predicate: p => p.Usuario == login.Usuario && p.Senha == login.Senha);
             if (usuario != null)
             {
                 var token = new TokenJWTBuilder()
                     .AddSecurityKey(JwtSecurityKey.Create("Secret_Key-12345678"))
-                    .AddSubject("Empresa - Canal Dev Net Core")
+                    .AddSubject("Token")
                     .AddIssuer("Teste.Security.Bearer")
                     .AddAudience("Teste.Security.Bearer")
                     .AddClaim("LoginId", usuario.LoginId.ToString())
-                    .AddExpiry(10)
+                    .AddExpiry(120)
                     .Builder();
                 return token.Value;
             }

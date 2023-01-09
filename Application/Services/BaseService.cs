@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Application.Services
 {
@@ -30,11 +31,6 @@ namespace Application.Services
             _repository.Add(objeto);
         }
 
-        public virtual IEnumerable<T> LoadAll()
-        {
-            return _repository.LoadAll();
-        }
-
         public virtual void Update(T objeto)
         {
             _repository.Update(objeto);
@@ -50,10 +46,37 @@ namespace Application.Services
             return _repository.LoadById(id);
         }
 
-        public virtual T LoadFirstBy(Expression<Func<T, bool>> predicate)
+        public virtual T? LoadFirstBy(
+                    Expression<Func<T, bool>>? predicate = null,
+                    Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+                    Expression<Func<T, T>>? selector = null)
         {
-            return _repository.LoadFirstBy(predicate);
+            return _repository.LoadFirstBy(predicate, include, selector);
         }
+
+        public virtual T? LoadLastBy(
+            Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            Expression<Func<T, T>>? selector = null)
+        {
+            return _repository.LoadLastBy(predicate, include, orderBy, selector);
+        }
+
+        public virtual IEnumerable<T> LoadAll(
+            Expression<Func<T, bool>>? predicate = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            int? limit = null,
+            Expression<Func<T, T>>? selector = null)
+        {
+            return _repository.LoadAll(predicate, include, limit, selector);
+        }
+
+        public void PartialUpdate(T entity, params Expression<Func<T, object>>[] properties)
+        {
+            _repository.PartialUpdate(entity, properties);
+        }
+
 
         #endregion
     }

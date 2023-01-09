@@ -14,6 +14,8 @@ namespace Application.Context
     public class DataContext : DbContext
     {
         #region Construtor
+        public DataContext() { }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         #endregion
 

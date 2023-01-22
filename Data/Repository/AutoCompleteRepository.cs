@@ -31,11 +31,13 @@ namespace Data.Repository
                                             selector: s => new Login()
                                             {
                                                 Usuario = s.Usuario,
+                                                DataCadastro = s.DataCadastro,
                                                 LoginId = s.LoginId
                                             }).Select(s => new AutoCompleteDto()
                                             {
                                                 Text = s.Usuario,
-                                                SubText = s.LoginId.ToString()
+                                                SubText = s.DataCadastro.ToString(),
+                                                Id = s.LoginId
                                             });
         }
     }

@@ -1,10 +1,4 @@
-﻿using Domain.Domain.Login;
-using Domain.Domain.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Domain.ViewModels;
 
 namespace Application.Interfaces
 {

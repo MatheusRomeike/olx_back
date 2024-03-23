@@ -1,26 +1,19 @@
-﻿using Domain.Domain.ViewModels;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Token;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Domain.Domain.Login;
 using Domain.Domain.Login.Contracts;
-using System.Net;
-using System.Net.Mail;
+using Domain.Domain.ViewModels;
 
 namespace Application.Services
 {
     public class LoginService : ILoginService
     {
         #region Atributos
-        private readonly ILoginRepository _loginRepository;
+        private readonly IAnuncioCategoriaRepository _loginRepository;
         #endregion
 
         #region Construtor
-        public LoginService(ILoginRepository loginRepository)
+        public LoginService(IAnuncioCategoriaRepository loginRepository)
         {
             _loginRepository = loginRepository;
         }

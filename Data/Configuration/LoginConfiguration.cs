@@ -1,11 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Domain.Domain.Login;
+using Domain.Domain.Usuario;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Domain.Login;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.Configuration
 {
@@ -13,16 +9,13 @@ namespace Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Login> builder)
         {
-            builder.ToTable("LOGIN");
-
             builder.HasKey(i => i.LoginId);
 
-            builder.Property(x => x.LoginId).ValueGeneratedOnAdd().HasColumnName("LOGINID");
-            builder.Property(x => x.Usuario).IsRequired().HasMaxLength(50).HasColumnName("USUARIO");
-            builder.Property(x => x.Senha).IsRequired().HasMaxLength(50).HasColumnName("SENHA");
-            builder.Property(x => x.TipoLogin).IsRequired().HasColumnName("TIPOUSUARIO");
-            builder.Property(x => x.DataCadastro).IsRequired().HasColumnName("DATACADASTRO");
-            builder.Property(x => x.DataAlteracao).IsRequired().HasColumnName("DATAALTERACAO");
+            builder.Property(x => x.LoginId).IsRequired().ValueGeneratedOnAdd();
+            builder.Property(x => x.Email).IsRequired().HasMaxLength(256);
+            builder.Property(x => x.Senha).IsRequired().HasMaxLength(50);
+
+            builder.HasOne(x => x.Usuario).WithOne().HasForeignKey<Usuario>(x => x.UsuarioId);
         }
     }
 }

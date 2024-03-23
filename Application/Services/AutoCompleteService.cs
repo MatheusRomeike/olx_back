@@ -1,11 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Domain.Dtos.AutoComplete;
 using Domain.Domain.Dtos.AutoComplete.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {

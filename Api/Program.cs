@@ -8,7 +8,6 @@ using Domain.Domain.Login.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -44,7 +43,7 @@ builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 #endregion
 
 #region Repository
-builder.Services.AddTransient<ILoginRepository, LoginRepository>();
+builder.Services.AddTransient<IAnuncioCategoriaRepository, LoginRepository>();
 builder.Services.AddScoped<IAutoCompleteRepository, AutoCompleteRepository>();
 #endregion
 

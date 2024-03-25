@@ -1,9 +1,9 @@
-﻿using Domain.Domain.Login;
-using Domain.Domain.Login.Contracts;
+﻿using Domain.Login;
+using Domain.Login.Contracts;
 
 namespace Data.Repository
 {
-    public class LoginRepository : BaseRepository<Login>, IAnuncioCategoriaRepository
+    public class LoginRepository : BaseRepository<Login>, ILoginRepository
     {
     }
 }

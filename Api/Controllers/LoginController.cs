@@ -1,6 +1,6 @@
 ﻿using Api.Models;
 using Application.Interfaces;
-using Domain.Domain.ViewModels;
+using Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

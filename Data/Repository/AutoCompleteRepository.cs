@@ -1,19 +1,17 @@
-﻿using Domain.Domain.Dtos.AutoComplete;
-using Domain.Domain.Dtos.AutoComplete.Contracts;
-using Domain.Domain.Login;
-using Domain.Domain.Login.Contracts;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.AutoComplete;
+using Domain.AutoComplete.Contracts;
+using Domain.Login.Contracts;
 
 namespace Data.Repository
 {
     public class AutoCompleteRepository : BaseRepository<AutoCompleteDto>, IAutoCompleteRepository
     {
         #region Atributos
-        private readonly IAnuncioCategoriaRepository _loginRepository;
+        private readonly ILoginRepository _loginRepository;
         #endregion
 
         #region Construtor
-        public AutoCompleteRepository(IAnuncioCategoriaRepository loginRepository)
+        public AutoCompleteRepository(ILoginRepository loginRepository)
         {
             _loginRepository = loginRepository;
         }

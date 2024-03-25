@@ -1,5 +1,5 @@
-﻿using Domain.Domain.Login;
-using Domain.Domain.Usuario;
+﻿using Domain.Login;
+using Domain.Usuario;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

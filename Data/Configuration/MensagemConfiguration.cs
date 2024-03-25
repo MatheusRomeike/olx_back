@@ -1,4 +1,4 @@
-﻿using Domain.Domain.Mensagem;
+﻿using Domain.Mensagem;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

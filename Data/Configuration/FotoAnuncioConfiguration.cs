@@ -1,4 +1,4 @@
-﻿using Domain.Domain.FotoAnuncio;
+﻿using Domain.FotoAnuncio;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

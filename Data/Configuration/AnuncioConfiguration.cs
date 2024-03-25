@@ -1,4 +1,4 @@
-﻿using Domain.Domain.Anuncio;
+﻿using Domain.Anuncio;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

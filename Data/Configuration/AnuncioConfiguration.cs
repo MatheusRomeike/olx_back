@@ -8,10 +8,10 @@ namespace Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Anuncio> builder)
         {
-            builder.HasKey(i => new { i.UsuarioId, i.AnuncioId });
+            builder.HasKey(i => i.AnuncioId);
 
-            builder.Property(x => x.UsuarioId).IsRequired();
             builder.Property(x => x.AnuncioId).ValueGeneratedOnAdd().IsRequired();
+            builder.Property(x => x.UsuarioId).IsRequired();
             builder.Property(x => x.Titulo).IsRequired().HasMaxLength(60);
             builder.Property(x => x.Descricao).IsRequired().HasMaxLength(512);
             builder.Property(x => x.Preco).IsRequired();

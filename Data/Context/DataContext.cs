@@ -1,15 +1,15 @@
-﻿using Domain.Anuncio;
+﻿using Data.Configuration;
+using Domain.Anuncio;
 using Domain.AnuncioCategoria;
 using Domain.Categoria;
 using Domain.FotoAnuncio;
 using Domain.Interesse;
-using Domain.Login;
 using Domain.Mensagem;
 using Domain.Usuario;
 using Domain.UsuarioRelatorio;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Context
+namespace Data.Context
 {
     public class DataContext : DbContext
     {
@@ -31,10 +31,21 @@ namespace Application.Context
                 base.OnConfiguring(optionsBuilder);
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
+            modelBuilder.ApplyConfiguration(new AnuncioConfiguration());
+            modelBuilder.ApplyConfiguration(new AnuncioCategoriaConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoriaConfiguration());
+            modelBuilder.ApplyConfiguration(new FotoAnuncioConfiguration());
+            modelBuilder.ApplyConfiguration(new InteresseConfiguration());
+            modelBuilder.ApplyConfiguration(new MensagemConfiguration());
+            modelBuilder.ApplyConfiguration(new UsuarioRelatorioConfiguration());
+        }
         #endregion
 
         #region Objetos
-        public DbSet<Login> Login { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Anuncio> Anuncio { get; set; }
         public DbSet<AnuncioCategoria> AnuncioCategoria { get; set; }

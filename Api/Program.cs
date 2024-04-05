@@ -1,4 +1,4 @@
-using Application.Context;
+using Data.Context;
 using Application.Interfaces;
 using Application.Services;
 using Application.Token;
@@ -9,7 +9,6 @@ using Domain.AutoComplete.Contracts;
 using Domain.Categoria.Contracts;
 using Domain.FotoAnuncio.Contracts;
 using Domain.Interesse.Contracts;
-using Domain.Login.Contracts;
 using Domain.Mensagem.Contracts;
 using Domain.Usuario.Contracts;
 using Domain.UsuarioRelatorio.Contracts;
@@ -47,7 +46,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 #region Repository
 builder.Services.AddTransient<IAutoCompleteRepository, AutoCompleteRepository>();
-builder.Services.AddTransient<ILoginRepository, LoginRepository>();
 builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddTransient<IAnuncioCategoriaRepository, AnuncioCategoriaRepository>();
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
@@ -59,7 +57,6 @@ builder.Services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepos
 #endregion
 
 #region Service
-builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 #endregion
 

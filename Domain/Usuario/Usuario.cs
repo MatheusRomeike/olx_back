@@ -7,6 +7,8 @@
         public string Nome { get; set; }
         public string FotoPerfil { get; set; }
         public string DataNascimento { get; set; }
+        public string Email { get; set; }
+        public string Senha { get; set; }
         #endregion
 
         #region Construtor

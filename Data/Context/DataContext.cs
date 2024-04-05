@@ -1,15 +1,15 @@
-﻿using Domain.Domain.Login;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Data.Configuration;
+using Domain.Anuncio;
+using Domain.AnuncioCategoria;
+using Domain.Categoria;
+using Domain.FotoAnuncio;
+using Domain.Interesse;
+using Domain.Mensagem;
+using Domain.Usuario;
+using Domain.UsuarioRelatorio;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Context
+namespace Data.Context
 {
     public class DataContext : DbContext
     {
@@ -31,10 +31,29 @@ namespace Application.Context
                 base.OnConfiguring(optionsBuilder);
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
+            modelBuilder.ApplyConfiguration(new AnuncioConfiguration());
+            modelBuilder.ApplyConfiguration(new AnuncioCategoriaConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoriaConfiguration());
+            modelBuilder.ApplyConfiguration(new FotoAnuncioConfiguration());
+            modelBuilder.ApplyConfiguration(new InteresseConfiguration());
+            modelBuilder.ApplyConfiguration(new MensagemConfiguration());
+            modelBuilder.ApplyConfiguration(new UsuarioRelatorioConfiguration());
+        }
         #endregion
 
         #region Objetos
-        public DbSet<Login> Login { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Anuncio> Anuncio { get; set; }
+        public DbSet<AnuncioCategoria> AnuncioCategoria { get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<FotoAnuncio> FotoAnuncio { get; set; }
+        public DbSet<Interesse> Interesse { get; set; }
+        public DbSet<Mensagem> Mensagem { get; set; }
+        public DbSet<UsuarioRelatorio> UsuarioRelatorio { get; set; }
         #endregion
     }
 }

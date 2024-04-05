@@ -1,16 +1,7 @@
-﻿using Application.Context;
-using Domain.Domain.Core.Contracts;
-using Microsoft.EntityFrameworkCore;
+﻿using Data.Context;
+using Domain.Core.Contracts;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Win32.SafeHandles;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data.Repository
 {

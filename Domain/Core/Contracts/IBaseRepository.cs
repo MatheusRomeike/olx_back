@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace Application.Interfaces
+namespace Domain.Core.Contracts
 {
-    public interface IBaseService<T> where T : class
+    public interface IBaseRepository<T> where T : class
     {
         /// <summary>
         /// Adicionar um objeto
@@ -11,6 +11,13 @@ namespace Application.Interfaces
         /// <param name="objeto"></param>
         /// <returns></returns>
         void Add(T objeto);
+
+        /// <summary>
+        /// Adicionar uma lista de objetos
+        /// </summary>
+        /// <param name="objeto"></param>
+        /// <returns></returns>
+        void Add(IEnumerable<T> objeto);
 
         /// <summary>
         /// Atualizar um objeto
@@ -73,5 +80,27 @@ namespace Application.Interfaces
             int? limit = null,
             Expression<Func<T, T>>? selector = null);
 
+        /// <summary>
+        /// Método responsável por buscar baseado nas condiçoes passadas
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="include"></param>
+        /// <param name="orderBy"></param>
+        /// <param name="limit"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        IQueryable<T> GetQuery(
+            Expression<Func<T, bool>>? predicate,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy,
+            int? limit,
+            Expression<Func<T, T>>? selector);
+
+        /// <summary>
+        /// Método responsável por atualizar a entidade baseado nas condiçoes passadas
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="properties"></param>
+        void PartialUpdate(T entity, params Expression<Func<T, object>>[] properties);
     }
 }

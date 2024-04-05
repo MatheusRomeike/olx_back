@@ -1,14 +1,20 @@
-using Application.Context;
+using Data.Context;
 using Application.Interfaces;
 using Application.Services;
 using Application.Token;
 using Data.Repository;
-using Domain.Domain.Dtos.AutoComplete.Contracts;
-using Domain.Domain.Login.Contracts;
+using Domain.Anuncio.Contracts;
+using Domain.AnuncioCategoria.Contracts;
+using Domain.AutoComplete.Contracts;
+using Domain.Categoria.Contracts;
+using Domain.FotoAnuncio.Contracts;
+using Domain.Interesse.Contracts;
+using Domain.Mensagem.Contracts;
+using Domain.Usuario.Contracts;
+using Domain.UsuarioRelatorio.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -38,14 +44,20 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 #region DI
 
-#region Service
-builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
+#region Repository
+builder.Services.AddTransient<IAutoCompleteRepository, AutoCompleteRepository>();
+builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddTransient<IAnuncioCategoriaRepository, AnuncioCategoriaRepository>();
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<IFotoAnuncioRepository, FotoAnuncioRepository>();
+builder.Services.AddTransient<IInteresseRepository, InteresseRepository>();
+builder.Services.AddTransient<IMensagemRepository, MensagemRepository>();
+builder.Services.AddTransient<IAnuncioRepository, AnuncioRepository>();
+builder.Services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepository>();
 #endregion
 
-#region Repository
-builder.Services.AddTransient<ILoginRepository, LoginRepository>();
-builder.Services.AddScoped<IAutoCompleteRepository, AutoCompleteRepository>();
+#region Service
+builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
 #endregion
 
 #endregion

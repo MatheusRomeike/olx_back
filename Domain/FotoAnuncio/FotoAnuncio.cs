@@ -5,7 +5,6 @@
         #region Atributos
         public int AnuncioId { get; set; }
         public int SequenciaFotoAnuncio { get; set; }
-        public string Foto { get; set; }
         #endregion
 
         #region Construtor

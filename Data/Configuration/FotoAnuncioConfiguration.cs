@@ -11,8 +11,7 @@ namespace Data.Configuration
             builder.HasKey(i => new { i.AnuncioId, i.SequenciaFotoAnuncio });
 
             builder.Property(x => x.AnuncioId).IsRequired();
-            builder.Property(x => x.SequenciaFotoAnuncio).ValueGeneratedOnAdd().IsRequired();
-            builder.Property(x => x.Foto).IsRequired().HasMaxLength(512);
+            builder.Property(x => x.SequenciaFotoAnuncio).IsRequired();
 
             builder.HasOne(x => x.Anuncio).WithMany().HasForeignKey(x => x.AnuncioId);
         }

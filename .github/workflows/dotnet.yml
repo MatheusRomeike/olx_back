@@ -41,5 +41,13 @@ jobs:
         port: ${{ secrets.DEPLOY_PORT }}
         source: "publish" # ou o diretório correto dos artefatos
         target: ${{ secrets.DEPLOY_TARGET }}
+
+    - name: Execute script on EC2 instance
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: ${{ secrets.DEPLOY_PORT }}
         script: |
           sudo systemctl restart olx_back.service

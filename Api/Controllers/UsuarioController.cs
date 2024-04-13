@@ -26,7 +26,7 @@ namespace Api.Controllers
 
         [HttpPost("Add")]
         [Authorize]
-        public async Task<IActionResult> AdicionarUsuarioAsync([FromBody] UsuarioViewModel usuario)
+        public IActionResult Add([FromBody] UsuarioViewModel usuario)
         {
             try
             {

@@ -15,6 +15,8 @@ using Domain.UsuarioRelatorio.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Data;
+using Data.Contracts;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -28,39 +30,14 @@ DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 
 var builder = WebApplication.CreateBuilder(args);
 
+ConfigureServices(builder.Services);
+
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-#region DbContext
-string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-
-builder.Services.AddDbContext<DataContext>(options =>
-                options.UseNpgsql(connectionString));
-#endregion
-
-#region DI
-
-#region Repository
-builder.Services.AddTransient<IAutoCompleteRepository, AutoCompleteRepository>();
-builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddTransient<IAnuncioCategoriaRepository, AnuncioCategoriaRepository>();
-builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddTransient<IFotoAnuncioRepository, FotoAnuncioRepository>();
-builder.Services.AddTransient<IInteresseRepository, InteresseRepository>();
-builder.Services.AddTransient<IMensagemRepository, MensagemRepository>();
-builder.Services.AddTransient<IAnuncioRepository, AnuncioRepository>();
-builder.Services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepository>();
-#endregion
-
-#region Service
-builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
-#endregion
-
-#endregion
 
 #region Token JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -125,3 +102,33 @@ app.MapControllers();
 app.UseSwaggerUI();
 
 app.Run();
+
+void ConfigureServices(IServiceCollection services)
+{
+    #region DataContext
+    string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+
+    services.AddDbContext<DataContext>(options =>
+                    options.UseNpgsql(connectionString));
+    #endregion
+
+    services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+    #region Repository
+    services.AddTransient<IAutoCompleteRepository, AutoCompleteRepository>();
+    services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+    services.AddTransient<IAnuncioCategoriaRepository, AnuncioCategoriaRepository>();
+    services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+    services.AddTransient<IFotoAnuncioRepository, FotoAnuncioRepository>();
+    services.AddTransient<IInteresseRepository, InteresseRepository>();
+    services.AddTransient<IMensagemRepository, MensagemRepository>();
+    services.AddTransient<IAnuncioRepository, AnuncioRepository>();
+    services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepository>();
+    #endregion
+
+    #region Service
+    services.AddScoped<IAutoCompleteService, AutoCompleteService>();
+    services.AddScoped<IAmazonS3Service, AmazonS3Service>();
+    services.AddScoped<IFotoAnuncioService, FotoAnuncioService>();
+    #endregion
+}

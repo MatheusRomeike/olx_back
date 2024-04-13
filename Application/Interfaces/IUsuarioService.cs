@@ -10,7 +10,7 @@ namespace Application.Interfaces
 {
     public interface IUsuarioService
     {
-        Task<bool> AdicionarUsuarioAsync(UsuarioViewModel usuario);
+        bool AdicionarUsuario(UsuarioViewModel usuario);
         TokenDto Logar(LoginViewModel Usuario);
     }
 }

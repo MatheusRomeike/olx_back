@@ -34,7 +34,7 @@ namespace Application.Services
         #endregion
 
         #region Métodos
-        public async Task<bool> AdicionarUsuarioAsync(UsuarioViewModel usuario)
+        public bool AdicionarUsuario(UsuarioViewModel usuario)
         {
             var senhaEncrypt = Encrypt.EncriptyPassword(usuario.Senha);
             var novoUsuario = new Usuario()

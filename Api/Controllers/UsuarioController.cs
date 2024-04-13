@@ -30,7 +30,7 @@ namespace Api.Controllers
         {
             try
             {
-                var result = await _usuarioService.AdicionarUsuarioAsync(usuario);
+                var result = _usuarioService.AdicionarUsuario(usuario);
                 return Ok(result);
             }
             catch (Exception ex)

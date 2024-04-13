@@ -15,6 +15,8 @@ using Domain.UsuarioRelatorio.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Domain.Usuario;
+using Microsoft.AspNetCore.Identity;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -57,7 +59,9 @@ builder.Services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepos
 #endregion
 
 #region Service
+
 builder.Services.AddScoped<IAutoCompleteService, AutoCompleteService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 #endregion
 
 #endregion

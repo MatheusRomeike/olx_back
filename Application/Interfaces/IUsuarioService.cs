@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels;
+using Domain.Dtos.Autenticacao;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Application.Interfaces
     public interface IUsuarioService
     {
         Task<bool> AdicionarUsuarioAsync(UsuarioViewModel usuario);
-        string Logar(UsuarioViewModel Usuario);
+        TokenDto Logar(LoginViewModel Usuario);
     }
 }

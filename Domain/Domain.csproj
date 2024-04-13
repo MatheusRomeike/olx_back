@@ -16,10 +16,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Dtos\" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.3" />
 	</ItemGroup>
 
 </Project>

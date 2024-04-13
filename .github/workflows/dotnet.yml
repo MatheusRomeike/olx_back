@@ -23,6 +23,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Package
       run: dotnet publish -c Release -o ./publish
+    - name: List files in publish directory
+      run: ls -l publish
+
 
   deploy:
     needs: build

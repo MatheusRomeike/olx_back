@@ -12,7 +12,6 @@ namespace Data.Configuration
 
             builder.Property(x => x.UsuarioId).IsRequired();
             builder.Property(x => x.Nome).IsRequired().HasMaxLength(60);
-            builder.Property(x => x.FotoPerfil).IsRequired().HasMaxLength(512);
             builder.Property(x => x.DataNascimento).IsRequired();
             builder.Property(x => x.Email).IsRequired().HasMaxLength(60);
             builder.Property(x => x.Senha).IsRequired().HasMaxLength(64);

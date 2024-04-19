@@ -22,7 +22,7 @@ namespace Application.Services
     {
         #region Atributos
         private readonly IUsuarioRepository _usuarioRepository;
-      
+
 
         #endregion
 
@@ -36,6 +36,10 @@ namespace Application.Services
         #region Métodos
         public bool AdicionarUsuario(UsuarioViewModel usuario)
         {
+            var emailCadastrado = _usuarioRepository.LoadFirstBy(predicate: p => p.Email == usuario.Email, selector: s => new Usuario() { UsuarioId = s.UsuarioId });
+            if (emailCadastrado != null)
+                throw new Exception("Já existe um usuário cadastrado com este e-mail.");
+
             var senhaEncrypt = Encrypt.EncriptyPassword(usuario.Senha);
             var novoUsuario = new Usuario()
             {
@@ -43,7 +47,6 @@ namespace Application.Services
                 Senha = senhaEncrypt,
                 Nome = usuario.Nome,
                 DataNascimento = usuario.DataNascimento,
-                FotoPerfil = usuario.FotoPerfil
             };
 
             _usuarioRepository.Add(novoUsuario);
@@ -66,13 +69,13 @@ namespace Application.Services
                  .AddExpiry(60)
                  .Builder();
 
-                    var authenticationResult = new TokenDto
-                    {
-                        AccessToken = token.Value,
-                        ExpiresIn = 3600
-                    };
+                var authenticationResult = new TokenDto
+                {
+                    AccessToken = token.Value,
+                    ExpiresIn = 3600
+                };
 
-                    return authenticationResult;
+                return authenticationResult;
             }
             throw new UnauthorizedAccessException("Usuário e/ou senha incorretos.");
         }

@@ -1,6 +1,7 @@
 ﻿using Api.Models;
 using Application.Interfaces;
 using Domain.AutoComplete;
+using Domain.FotoAnuncio.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +18,14 @@ namespace Api.Controllers
         #endregion
 
         #region Atributos
-        public AutoCompleteController(IAutoCompleteService autoCompleteService)
+        public AutoCompleteController(
+            IAutoCompleteService autoCompleteService)
         {
             _autoCompleteService = autoCompleteService;
         }
         #endregion
 
         #region HttpGet
-
         #endregion
     }
 }

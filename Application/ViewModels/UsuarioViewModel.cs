@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace Application.ViewModels
         public string DataNascimento { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
+        public IFormFile? Foto { get; set; }
     }
 }

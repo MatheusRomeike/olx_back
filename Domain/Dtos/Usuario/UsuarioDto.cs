@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.ViewModels
+namespace Domain.Dtos.Usuario
 {
-    public class UsuarioViewModel
+    public class UsuarioDto
     {
         public string Nome { get; set; }
         public string DataNascimento { get; set; }
         public string Email { get; set; }
-        public string Senha { get; set; }
+        public string? Foto { get; set; }
     }
 }

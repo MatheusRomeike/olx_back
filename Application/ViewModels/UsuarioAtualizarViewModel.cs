@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application.ViewModels
 {
-    public class UsuarioViewModel
+    public class UsuarioAtualizarViewModel
     {
         public string Nome { get; set; }
         public string DataNascimento { get; set; }
         public string Email { get; set; }
-        public string Senha { get; set; }
+        public IFormFile? Foto { get; set; }
     }
 }

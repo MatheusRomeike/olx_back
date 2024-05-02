@@ -9,7 +9,7 @@ namespace Api.Controllers
         /// <summary>
         /// Id do úsuario logado
         /// </summary>
-        public int LoginId => Convert.ToInt16(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "LoginId")?.Value);
+        public int UsuarioId => Convert.ToInt16(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "UsuarioId")?.Value);
         #endregion
 
         #region Métodos

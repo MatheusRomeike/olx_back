@@ -22,7 +22,11 @@ namespace Data.Context
         #region Métodos
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#if DEBUG
+            DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env.local"));
+#else
             DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+#endif
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
             if (!optionsBuilder.IsConfigured)

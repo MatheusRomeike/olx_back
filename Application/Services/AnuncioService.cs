@@ -73,8 +73,13 @@ namespace Application.Services
 
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");
+            anuncio.EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Inativo;
+            _anuncioRepository.Update(anuncio);
+        }
 
-            _anuncioRepository.Delete(anuncio);
+        public List<Anuncio> LoadByUsuario(int usuarioId)
+        {
+            return _anuncioRepository.LoadAll(x => x.UsuarioId == usuarioId).ToList();
         }
     }
 

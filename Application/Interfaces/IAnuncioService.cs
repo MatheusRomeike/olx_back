@@ -16,5 +16,8 @@ namespace Application.Interfaces
         void Update(AnuncioViewModel anuncioViewModel);
 
         void Delete(int anuncioId);
+
+        List<Anuncio> LoadByUsuario(int usuarioId);
+
     }
 }

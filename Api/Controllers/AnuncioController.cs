@@ -84,6 +84,22 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("LoadByUsuario")]
+        [Authorize]
+        public IActionResult LoadByUsuario(int usuarioId)
+        {
+            try
+            {
+                var anuncio = _anuncioService.LoadByUsuario(usuarioId);
+                return Ok(anuncio);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
     }

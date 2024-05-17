@@ -1,5 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.ViewModels;
+using Domain.Dtos.Anuncio;
+using Domain.Dtos.Autenticacao;
+using Domain.Dtos.Usuario;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +26,12 @@ namespace Api.Controllers
         #endregion
 
         #region HttpGet
+        /// <summary>
+        /// Método responsável por obter os dados do usuário logado.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(typeof(UsuarioDto), 200)]
         public async Task<IActionResult> ObterAsync()
         {
             try
@@ -39,7 +47,13 @@ namespace Api.Controllers
         #endregion
 
         #region HttpPost
+        /// <summary>
+        /// Método responsável por adicionar um novo usuário.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         [HttpPost("Add")]
+        [ProducesResponseType(typeof(bool), 200)]
         [AllowAnonymous]
         public IActionResult Add([FromBody] UsuarioViewModel usuario)
         {
@@ -54,7 +68,13 @@ namespace Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Método responsável por logar um usuário.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         [HttpPost("Login")]
+        [ProducesResponseType(typeof(TokenDto), 200)]
         [AllowAnonymous]
         public IActionResult Logar([FromBody] LoginViewModel usuario)
         {
@@ -76,7 +96,13 @@ namespace Api.Controllers
         #endregion
 
         #region HttpPatch
+        /// <summary>
+        /// Método responsável por atualizar os dados do usuário logado.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
         [HttpPatch]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> AtualizarAsync([FromForm] UsuarioAtualizarViewModel usuario)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Application.ViewModels;
+using Domain.Dtos.Anuncio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,7 +86,13 @@ namespace Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Método responsável por obter relatório de vendas dos anúncios do usuário logado.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet("RelatorioVendasAnuncio")]
+        [ProducesResponseType(typeof(RelatorioVendasDto), 200)]
         public IActionResult RelatorioVendasAnuncio([FromQuery] RelatorioVendasViewModel model)
         {
             try

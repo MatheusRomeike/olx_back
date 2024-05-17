@@ -84,6 +84,20 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("RelatorioVendasAnuncio")]
+        public IActionResult RelatorioVendasAnuncio([FromQuery] RelatorioVendasViewModel model)
+        {
+            try
+            {
+
+                return Ok(_anuncioService.RelatorioVendasAnuncio(model, UsuarioId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
     }

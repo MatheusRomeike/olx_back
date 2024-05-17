@@ -133,6 +133,7 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IAutoCompleteService, AutoCompleteService>();
     services.AddScoped<IAmazonS3Service, AmazonS3Service>();
     services.AddScoped<IFotoAnuncioService, FotoAnuncioService>();
+    builder.Services.AddScoped<IAnuncioService, AnuncioService>();
     builder.Services.AddScoped<IUsuarioService, UsuarioService>();
     #endregion
 }

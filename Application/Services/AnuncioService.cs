@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Domain.Anuncio.Contracts;
 using Domain.Anuncio;
 using Application.Interfaces;
+using Domain.Dtos.Anuncio;
 
 namespace Application.Services
 {
@@ -75,6 +76,21 @@ namespace Application.Services
                 throw new Exception("Anúncio não encontrado.");
 
             _anuncioRepository.Delete(anuncio);
+        }
+
+        public List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId)
+        {
+            return _anuncioRepository.LoadAll(
+                predicate: p => p.UsuarioId == usuarioId && p.DataCriacao >= model.DataInicial && p.DataCriacao <= model.DataFinal,
+                selector: s => new Anuncio()
+                {
+                    Titulo = s.Titulo,
+                    EstadoAnuncio = s.EstadoAnuncio,
+                }).Select(x => new RelatorioVendasDto()
+                {
+                    Titulo = x.Titulo,
+                    EstadoAnuncio = x.EstadoAnuncio
+                }).ToList();
         }
     }
 

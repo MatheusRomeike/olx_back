@@ -38,16 +38,18 @@ namespace Application.Services
                 Titulo = anuncioViewModel.Titulo,
                 Descricao = anuncioViewModel.Descricao,
                 Preco = anuncioViewModel.Preco,
-                EstadoAnuncio = anuncioViewModel.EstadoAnuncio,
-                DataCriacao = DateTime.Now
+                EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
+                DataCriacao = DateTime.Now,
+                UsuarioId = anuncioViewModel.UsuarioId
+
             };
 
             _anuncioRepository.Add(anuncio);
         }
 
-        public Anuncio LoadById(int anuncioId)
+        public Anuncio LoadById(int anuncioId, int usuarioId)
         {
-            return _anuncioRepository.LoadById(anuncioId);
+            return _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId);
         }
 
         public void Update(AnuncioViewModel anuncioViewModel)

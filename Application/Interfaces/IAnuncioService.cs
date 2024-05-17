@@ -12,7 +12,7 @@ namespace Application.Interfaces
     public interface IAnuncioService
     {
         void Add(AnuncioViewModel anuncioViewModel);
-        Anuncio LoadById(int anuncioId);
+        Anuncio LoadById(int anuncioId, int usuarioId);
 
         void Update(AnuncioViewModel anuncioViewModel);
 

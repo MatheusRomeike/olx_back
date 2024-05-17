@@ -32,6 +32,7 @@ namespace Api.Controllers
         {
             try
             {
+                model.UsuarioId = UsuarioId;
                 _anuncioService.Add(model);
                 return Ok(true);
             }
@@ -62,7 +63,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncio = _anuncioService.LoadById(anuncioId);
+                var anuncio = _anuncioService.LoadById(anuncioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)
@@ -109,11 +110,11 @@ namespace Api.Controllers
 
         [HttpGet("LoadByUsuario")]
         [Authorize]
-        public IActionResult LoadByUsuario(int usuarioId)
+        public IActionResult LoadByUsuario()
         {
             try
             {
-                var anuncio = _anuncioService.LoadByUsuario(usuarioId);
+                var anuncio = _anuncioService.LoadByUsuario(UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

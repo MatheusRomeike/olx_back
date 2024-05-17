@@ -17,8 +17,6 @@ namespace Data.Configuration
             builder.HasIndex(x => x.Email).IsUnique();
             builder.Property(x => x.Senha).IsRequired().HasMaxLength(64);
 
-            builder.HasMany(x => x.UsuarioRelatorios).WithOne().HasForeignKey(x => x.UsuarioId);
-
             builder.HasMany(x => x.Anuncios).WithOne().HasForeignKey(x => x.UsuarioId);
 
             builder.HasMany(x => x.Mensagens).WithOne().HasForeignKey(x => x.UsuarioId);

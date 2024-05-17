@@ -11,20 +11,26 @@ using Domain.FotoAnuncio.Contracts;
 using Domain.Interesse.Contracts;
 using Domain.Mensagem.Contracts;
 using Domain.Usuario.Contracts;
-using Domain.UsuarioRelatorio.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Data;
 using Data.Contracts;
+using System.Diagnostics;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 #endregion
 
-#region Envinroment
-DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+#region Environment
+#if DEBUG
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env.local"));
+#else
+    DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+#endif
 
 #endregion
 
@@ -37,7 +43,41 @@ ConfigureServices(builder.Services);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Olx", Version = "v1" });
+
+    // Configure o caminho e o nome do arquivo XML de documentação
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+
+    // Adicione suporte para autenticação Bearer no Swagger UI
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // Adicione o esquema de segurança Bearer ao requisitar endpoints no Swagger UI
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                new string[] {}
+            }
+        });
+});
 
 #region Token JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -123,13 +163,13 @@ void ConfigureServices(IServiceCollection services)
     services.AddTransient<IInteresseRepository, InteresseRepository>();
     services.AddTransient<IMensagemRepository, MensagemRepository>();
     services.AddTransient<IAnuncioRepository, AnuncioRepository>();
-    services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepository>();
     #endregion
 
     #region Service
     services.AddScoped<IAutoCompleteService, AutoCompleteService>();
     services.AddScoped<IAmazonS3Service, AmazonS3Service>();
     services.AddScoped<IFotoAnuncioService, FotoAnuncioService>();
+    builder.Services.AddScoped<IAnuncioService, AnuncioService>();
     builder.Services.AddScoped<IUsuarioService, UsuarioService>();
     #endregion
 }

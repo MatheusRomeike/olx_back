@@ -76,6 +76,7 @@ namespace Data.Repository
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             int? limit = null,
+            int? skip = null,
             Expression<Func<T, T>>? selector = null)
         {
             var query = GetQuery(predicate: predicate, limit: limit, include: include, selector: selector);
@@ -87,6 +88,7 @@ namespace Data.Repository
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             int? limit = null,
+            int? skip = null,
             Expression<Func<T, T>>? selector = null)
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
@@ -96,6 +98,9 @@ namespace Data.Repository
 
             if (limit != null)
                 query = query.Take(limit.Value);
+
+            if (skip != null)
+                query = query.Skip(skip.Value);
 
             if (orderBy != null)
                 query = orderBy(query);

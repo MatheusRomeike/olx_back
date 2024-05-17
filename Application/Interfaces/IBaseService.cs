@@ -71,6 +71,7 @@ namespace Application.Interfaces
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             int? limit = null,
+            int? skip = null,
             Expression<Func<T, T>>? selector = null);
 
     }

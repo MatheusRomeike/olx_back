@@ -78,6 +78,7 @@ namespace Domain.Core.Contracts
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             int? limit = null,
+            int? skip = null,
             Expression<Func<T, T>>? selector = null);
 
         /// <summary>
@@ -94,7 +95,8 @@ namespace Domain.Core.Contracts
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include,
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy,
             int? limit,
-            Expression<Func<T, T>>? selector);
+            int? skip = null,
+            Expression<Func<T, T>>? selector = null);
 
         /// <summary>
         /// Método responsável por atualizar a entidade baseado nas condiçoes passadas

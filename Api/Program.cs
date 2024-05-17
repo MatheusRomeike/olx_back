@@ -11,7 +11,6 @@ using Domain.FotoAnuncio.Contracts;
 using Domain.Interesse.Contracts;
 using Domain.Mensagem.Contracts;
 using Domain.Usuario.Contracts;
-using Domain.UsuarioRelatorio.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -128,7 +127,6 @@ void ConfigureServices(IServiceCollection services)
     services.AddTransient<IInteresseRepository, InteresseRepository>();
     services.AddTransient<IMensagemRepository, MensagemRepository>();
     services.AddTransient<IAnuncioRepository, AnuncioRepository>();
-    services.AddTransient<IUsuarioRelatorioRepository, UsuarioRelatorioRepository>();
     #endregion
 
     #region Service

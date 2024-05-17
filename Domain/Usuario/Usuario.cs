@@ -15,7 +15,6 @@
         #endregion
 
         #region Relacionamentos
-        public virtual List<UsuarioRelatorio.UsuarioRelatorio> UsuarioRelatorios { get; set; }
         public virtual List<Anuncio.Anuncio> Anuncios { get; set; }
         public virtual List<Mensagem.Mensagem> Mensagens { get; set; }
         public virtual List<Interesse.Interesse> Interesses { get; set; }

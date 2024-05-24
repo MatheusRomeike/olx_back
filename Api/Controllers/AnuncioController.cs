@@ -28,7 +28,7 @@ namespace Api.Controllers
         #region Métodos
         [HttpPost("Add")]
         [Authorize]
-        public IActionResult Add([FromBody] AnuncioViewModel model)
+        public IActionResult Add([FromForm] AnuncioViewModel model)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncio = _anuncioService.LoadById(anuncioId, UsuarioId);
+                var anuncio = _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

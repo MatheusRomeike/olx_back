@@ -12,6 +12,9 @@ using Domain.Anuncio.Contracts;
 using Domain.Anuncio;
 using Application.Interfaces;
 using Domain.Dtos.Anuncio;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Domain.Dtos.Usuario;
 
 namespace Application.Services
 {
@@ -19,14 +22,18 @@ namespace Application.Services
     {
         #region Atributos
         private readonly IAnuncioRepository _anuncioRepository;
+        private readonly IFotoAnuncioService _fotoAnuncioService;
+        private readonly IAmazonS3Service _amazonS3Service;
 
 
         #endregion
 
         #region Construtor
-        public AnuncioService(IAnuncioRepository anuncioRepository)
+        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service)
         {
             _anuncioRepository = anuncioRepository;
+            _fotoAnuncioService = fotoAnuncioService;
+            _amazonS3Service = amazonS3Service;
         }
         #endregion
 
@@ -41,15 +48,65 @@ namespace Application.Services
                 EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
                 DataCriacao = DateTime.Now,
                 UsuarioId = anuncioViewModel.UsuarioId
-
             };
 
             _anuncioRepository.Add(anuncio);
+            
+
+            if ( anuncioViewModel.Foto1 != null)
+            {
+                var files = AgruparFotos(anuncioViewModel);
+                foreach (var item in files)
+                {
+                    _fotoAnuncioService.AddArchiveAsync(anuncio.AnuncioId, item);
+                }
+            }
         }
 
-        public Anuncio LoadById(int anuncioId, int usuarioId)
+        private List<IFormFile> AgruparFotos(AnuncioViewModel model)
         {
-            return _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId);
+            List<IFormFile> files = new List<IFormFile>();
+
+            var properties = typeof(AnuncioViewModel).GetProperties()
+                             .Where(p => p.PropertyType == typeof(IFormFile));
+
+            foreach (var property in properties)
+            {
+                var file = (IFormFile)property.GetValue(model);
+                if (file != null)
+                {
+                    files.Add(file);
+                }
+            }
+
+            return files;
+        }
+
+        public async Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId)
+        {
+
+            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId, include: j => j.Include(x => x.FotosAnuncio));
+            if (anuncio == null)
+                throw new Exception("Anúncio não encontrado.");
+
+            var retorno = new AnuncioDto()
+            {
+                DataCriacao = anuncio.DataCriacao,
+                Descricao = anuncio.Descricao,
+                Preco = anuncio.Preco,
+                AnuncioId = anuncioId,
+                EstadoAnuncio = anuncio.EstadoAnuncio,
+                Titulo = anuncio.Titulo,
+            };
+
+            foreach (var item in anuncio.FotosAnuncio)
+            {
+                var byteArray = await _amazonS3Service.GetFileAsync($"adimages/{anuncioId}/{item.SequenciaFotoAnuncio}");
+                var foto = byteArray == null ? null : $"data:image/jpeg;base64,{Convert.ToBase64String(byteArray)}";
+                retorno.Fotos.Add(foto);
+            }
+
+            return retorno;
         }
 
         public void Update(AnuncioViewModel anuncioViewModel)

@@ -40,7 +40,7 @@ namespace Application.Services
                        orderBy: o => o.OrderBy(x => x.SequenciaFotoAnuncio))?.SequenciaFotoAnuncio ?? 1;
 
                 var key = $"adimages/{anuncioId}/{sequenciaFotoAnuncio}";
-                try
+                try 
                 {
                     var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
 

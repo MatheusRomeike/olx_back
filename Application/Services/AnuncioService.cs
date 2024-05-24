@@ -15,6 +15,7 @@ using Domain.Dtos.Anuncio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Domain.Dtos.Usuario;
+using Domain.FotoAnuncio.Contracts;
 
 namespace Application.Services
 {
@@ -24,43 +25,55 @@ namespace Application.Services
         private readonly IAnuncioRepository _anuncioRepository;
         private readonly IFotoAnuncioService _fotoAnuncioService;
         private readonly IAmazonS3Service _amazonS3Service;
-
+        private readonly IFotoAnuncioRepository _fotoAnuncioRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
         #endregion
 
         #region Construtor
-        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service)
+        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository)
         {
             _anuncioRepository = anuncioRepository;
             _fotoAnuncioService = fotoAnuncioService;
             _amazonS3Service = amazonS3Service;
+            _fotoAnuncioRepository = fotoAnuncioRepository;
+            _usuarioRepository = usuarioRepository;
         }
         #endregion
 
         #region Métodos
         public void Add(AnuncioViewModel anuncioViewModel)
         {
-            var anuncio = new Anuncio
+            try
             {
-                Titulo = anuncioViewModel.Titulo,
-                Descricao = anuncioViewModel.Descricao,
-                Preco = anuncioViewModel.Preco,
-                EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
-                DataCriacao = DateTime.Now,
-                UsuarioId = anuncioViewModel.UsuarioId
-            };
-
-            _anuncioRepository.Add(anuncio);
-            
-
-            if ( anuncioViewModel.Foto1 != null)
-            {
-                var files = AgruparFotos(anuncioViewModel);
-                foreach (var item in files)
+                var anuncio = new Anuncio
                 {
-                    _fotoAnuncioService.AddArchiveAsync(anuncio.AnuncioId, item);
+                    Titulo = anuncioViewModel.Titulo,
+                    Descricao = anuncioViewModel.Descricao,
+                    Preco = anuncioViewModel.Preco,
+                    EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
+                    DataCriacao = DateTime.Now,
+                    UsuarioId = anuncioViewModel.UsuarioId
+                };
+
+                _anuncioRepository.Add(anuncio);
+
+
+                if (anuncioViewModel.Foto1 != null)
+                {
+                    var files = AgruparFotos(anuncioViewModel);
+                    foreach (var item in files)
+                    {
+                        _fotoAnuncioService.AddArchiveAsync(anuncio.AnuncioId, item);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+         
         }
 
         private List<IFormFile> AgruparFotos(AnuncioViewModel model)
@@ -85,7 +98,7 @@ namespace Application.Services
         public async Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId)
         {
 
-            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId, include: j => j.Include(x => x.FotosAnuncio));
+            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId, include: j => j.Include(u => u.Usuario));
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");
 
@@ -97,8 +110,12 @@ namespace Application.Services
                 AnuncioId = anuncioId,
                 EstadoAnuncio = anuncio.EstadoAnuncio,
                 Titulo = anuncio.Titulo,
+                UsuarioId = usuarioId,
+                Fotos = new List<string>(),
+                Usuario = anuncio.Usuario
             };
 
+            anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
             foreach (var item in anuncio.FotosAnuncio)
             {
                 var byteArray = await _amazonS3Service.GetFileAsync($"adimages/{anuncioId}/{item.SequenciaFotoAnuncio}");

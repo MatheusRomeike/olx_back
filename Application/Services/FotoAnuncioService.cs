@@ -40,7 +40,7 @@ namespace Application.Services
                        orderBy: o => o.OrderBy(x => x.SequenciaFotoAnuncio))?.SequenciaFotoAnuncio ?? 1;
 
                 var key = $"adimages/{anuncioId}/{sequenciaFotoAnuncio}";
-                try 
+                try
                 {
                     var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
 
@@ -52,8 +52,9 @@ namespace Application.Services
                         AnuncioId = anuncioId,
                         SequenciaFotoAnuncio = sequenciaFotoAnuncio
                     });
-
-                    return _unitOfWork.EFCommit();
+                    // transaction.Commit();
+                    _unitOfWork.EFCommit();
+                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -61,12 +62,9 @@ namespace Application.Services
                     await _amazonS3Service.DeleteFileAsync(key);
                     throw new Exception($"Erro ao salvar foto do anúncio. {ex.Message}");
                 }
-                finally
-                {
-                    transaction.Dispose();
-                }
             }
         }
+
 
         public async Task<List<byte[]>> GetArchivesAsync(int anuncioId)
         {

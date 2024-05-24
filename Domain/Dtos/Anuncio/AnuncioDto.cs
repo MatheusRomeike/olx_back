@@ -1,4 +1,5 @@
 ﻿using Domain.Anuncio.Enums;
+using Domain.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Domain.Dtos.Anuncio
         public DateTime DataCriacao { get; set; }
 
         public List<string> Fotos { get; set; } 
+        public Domain.Usuario.Usuario Usuario { get; set; }
     }
 }

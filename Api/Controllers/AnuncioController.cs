@@ -2,6 +2,7 @@
 using Application.Services;
 using Application.ViewModels;
 using Domain.Dtos.Anuncio;
+using Domain.Dtos.Usuario;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,11 +60,12 @@ namespace Api.Controllers
 
         [HttpGet("LoadById")]
         [Authorize]
-        public IActionResult LoadById(int anuncioId)
+        [ProducesResponseType(typeof(AnuncioDto), 200)]
+        public async Task<IActionResult> LoadById(int anuncioId)
         {
             try
             {
-                var anuncio = _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
+                var anuncio =  await _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

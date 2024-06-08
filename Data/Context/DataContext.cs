@@ -6,7 +6,6 @@ using Domain.FotoAnuncio;
 using Domain.Interesse;
 using Domain.Mensagem;
 using Domain.Usuario;
-using Domain.UsuarioRelatorio;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context
@@ -22,7 +21,11 @@ namespace Data.Context
         #region Métodos
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+#if DEBUG
+            DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env.local"));
+#else
             DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+#endif
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
             if (!optionsBuilder.IsConfigured)
@@ -41,7 +44,6 @@ namespace Data.Context
             modelBuilder.ApplyConfiguration(new FotoAnuncioConfiguration());
             modelBuilder.ApplyConfiguration(new InteresseConfiguration());
             modelBuilder.ApplyConfiguration(new MensagemConfiguration());
-            modelBuilder.ApplyConfiguration(new UsuarioRelatorioConfiguration());
         }
         #endregion
 
@@ -53,7 +55,6 @@ namespace Data.Context
         public DbSet<FotoAnuncio> FotoAnuncio { get; set; }
         public DbSet<Interesse> Interesse { get; set; }
         public DbSet<Mensagem> Mensagem { get; set; }
-        public DbSet<UsuarioRelatorio> UsuarioRelatorio { get; set; }
         #endregion
     }
 }

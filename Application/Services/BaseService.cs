@@ -60,9 +60,10 @@ namespace Application.Services
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             int? limit = null,
+            int? skip = null,
             Expression<Func<T, T>>? selector = null)
         {
-            return _repository.LoadAll(predicate, include, limit, selector);
+            return _repository.LoadAll(predicate, include, limit, skip, selector);
         }
 
         public void PartialUpdate(T entity, params Expression<Func<T, object>>[] properties)

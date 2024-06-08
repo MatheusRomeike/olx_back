@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.ViewModels
 {
-    public class LoginViewModel
+    public class RelatorioVendasViewModel
     {
-        public string Email { get; set; }
-        public string Senha { get; set; }
+        public DateTime DataInicial { get; set; }
+        public DateTime DataFinal { get; set; }
     }
 }

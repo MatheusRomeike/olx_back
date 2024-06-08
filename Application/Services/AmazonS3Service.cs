@@ -46,6 +46,9 @@ namespace Application.Services
         #region Métodos
         public async Task<byte[]> GetFileAsync(string key)
         {
+            try
+            {
+
             var request = new GetObjectRequest
             {
                 BucketName = BucketName,
@@ -59,6 +62,13 @@ namespace Application.Services
             await responseStream.CopyToAsync(memoryStream);
 
             return memoryStream.ToArray();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "The specified key does not exist.")
+                    return null;
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<List<byte[]>> GetFilesAsync(List<string> keys)

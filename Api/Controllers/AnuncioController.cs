@@ -58,6 +58,23 @@ namespace Api.Controllers
             }
         }
 
+
+        [HttpGet("List")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> List([FromQuery] FiltrarAnuncioViewModel model)
+        {
+            try
+            {
+                var anuncios = await _anuncioService.List(model);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("LoadById")]
         [Authorize]
         [ProducesResponseType(typeof(AnuncioDto), 200)]

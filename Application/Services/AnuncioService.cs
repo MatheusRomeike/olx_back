@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Domain.Dtos.Usuario;
 using Domain.FotoAnuncio.Contracts;
+using System.Linq.Expressions;
 
 namespace Application.Services
 {
@@ -93,6 +94,70 @@ namespace Application.Services
             }
 
             return files;
+        }
+
+        public async Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model)
+        {
+            var anunciosDto = new List<AnuncioDto>();
+            Expression<Func<Anuncio, bool>> predicate = x => x.EstadoAnuncio == Domain.Anuncio.Enums.EstadoAnuncio.Ativo;
+            Func<IQueryable<Anuncio>, IOrderedQueryable<Anuncio>> orderBy = x => x.OrderByDescending(x => x.DataCriacao);
+
+            if(model.Titulo.HasValue)
+                orderBy = model.Titulo.Value == Domain.Anuncio.Enums.Ordem.DESC ? x => x.OrderByDescending(y => y.Titulo) : x => x.OrderBy(z => z.Titulo);
+
+            if (model.Preco.HasValue)
+                orderBy = model.Preco.Value == Domain.Anuncio.Enums.Ordem.DESC ? x => x.OrderByDescending(y => y.Preco) : x => x.OrderBy(z => z.Preco);
+
+            //if(model.CategoriaId.HasValue)
+            predicate = AndAlsoWhen(predicate, x => x.AnuncioCategorias.Select(x => x.CategoriaId).Contains(model.CategoriaId ?? 0),() => model.CategoriaId.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.Preco >= model.PrecoMin, () => model.PrecoMin.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
+
+            var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy);
+
+            if (anuncios == null || anuncios.Count() == 0)
+                return anunciosDto;
+
+            foreach (var anuncio in anuncios)
+            {
+                anunciosDto.Add(new AnuncioDto()
+                {
+                    Descricao = anuncio.Descricao,
+                    Preco = anuncio.Preco,
+                    AnuncioId = anuncio.AnuncioId,
+                    Titulo = anuncio.Titulo,
+                    Fotos = new List<string>()
+                    {
+                        "https://olx-bucket-free.s3.amazonaws.com/adimages/0/1",
+                        //$"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncio.AnuncioId}/1"
+                    },
+                });
+            }
+
+            
+
+            //anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
+            //foreach (var item in anuncio.FotosAnuncio)
+            //{
+            //    var byteArray = await _amazonS3Service.GetFileAsync($"adimages/{anuncioId}/{item.SequenciaFotoAnuncio}");
+            //    var foto = byteArray == null ? null : $"data:image/jpeg;base64,{Convert.ToBase64String(byteArray)}";
+            //    retorno.Fotos.Add(foto);
+            //}
+
+            return anunciosDto;
+        }
+
+        public  Expression<Func<T, bool>> AndAlsoWhen<T>(
+     Expression<Func<T, bool>> baseCondition,
+    Expression<Func<T, bool>> andAlsoCondition,
+    Func<bool> whenCondition)
+        {
+            if (whenCondition.Invoke())
+            {
+                var body = Expression.AndAlso(baseCondition.Body, Expression.Invoke(andAlsoCondition, baseCondition.Parameters[0]));
+                baseCondition = Expression.Lambda<Func<T, bool>>(body, baseCondition.Parameters[0]);
+            }
+            return baseCondition;
         }
 
         public async Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId)

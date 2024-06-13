@@ -112,7 +112,8 @@ namespace Application.Services
                 UsuarioId = usuarioId,
                 Fotos = new List<string>(),
                 Usuario = anuncio.Usuario,
-                DescricaoCategoria = _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao
+                DescricaoCategoria = _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao,
+                CategoriaId = anuncio.CategoriaId,
             };
 
             anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();

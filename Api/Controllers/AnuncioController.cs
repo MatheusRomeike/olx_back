@@ -61,11 +61,11 @@ namespace Api.Controllers
         [HttpGet("LoadById")]
         [Authorize]
         [ProducesResponseType(typeof(AnuncioDto), 200)]
-        public async Task<IActionResult> LoadById(int anuncioId)
+        public async Task<IActionResult> LoadById(int anuncioId, int usuarioId)
         {
             try
             {
-                var anuncio =  await _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
+                var anuncio =  await _anuncioService.LoadByIdAsync(anuncioId, usuarioId == 0  ? UsuarioId : usuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

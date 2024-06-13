@@ -26,16 +26,16 @@ namespace Api.Controllers
             _mensagemService = mensagemService;
         }
         #endregion
-
+        
         #region Métodos
-        [HttpGet("RelatorioVendasAnuncio")]
+        [HttpGet("Chat")]
         [Authorize]
         [ProducesResponseType(typeof(MensagemDto), 200)]
-        public IActionResult List(int anuncioId)
+        public IActionResult List(int anuncioId, int usuarioInteressadoId)
         {
             try
             {
-                return Ok(_mensagemService.List(anuncioId, UsuarioId));
+                return Ok(_mensagemService.List(anuncioId, usuarioInteressadoId, UsuarioId));
             }
             catch (Exception ex)
             {

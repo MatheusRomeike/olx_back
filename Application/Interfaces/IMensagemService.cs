@@ -9,6 +9,6 @@ namespace Application.Interfaces
 {
     public interface IMensagemService
     {
-        List<MensagemDto> List(int anuncioId, int usuarioId);
+        List<MensagemDto> List(int anuncioId, int usuarioInteressadoId, int usuarioId);
     }
 }

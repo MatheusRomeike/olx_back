@@ -13,7 +13,7 @@ namespace Data.Configuration
             builder.Property(x => x.AnuncioId).IsRequired();
             builder.Property(x => x.SequenciaFotoAnuncio).IsRequired();
 
-            builder.HasOne(x => x.Anuncio).WithMany().HasForeignKey(x => x.AnuncioId);
+            builder.HasOne(x => x.Anuncio).WithMany(x => x.FotosAnuncio).HasForeignKey(x => x.AnuncioId);
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Data.Configuration
             builder.Property(x => x.Texto).IsRequired().HasMaxLength(128);
             builder.Property(x => x.DataCriacao).IsRequired();
 
-            builder.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId);
+            builder.HasOne(x => x.Usuario).WithMany(x => x.Mensagens).HasForeignKey(x => x.UsuarioId);
 
-            builder.HasOne(x => x.Anuncio).WithMany().HasForeignKey(x => x.AnuncioId);
+            builder.HasOne(x => x.Anuncio).WithMany(x => x.Mensagens).HasForeignKey(x => x.AnuncioId);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Data.Configuration
             builder.Property(x => x.AnuncioId).IsRequired();
             builder.Property(x => x.DataCriacao).IsRequired();
 
-            builder.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId);
+            builder.HasOne(x => x.Usuario).WithMany(x => x.Interesses).HasForeignKey(x => x.UsuarioId);
 
-            builder.HasOne(x => x.Anuncio).WithMany().HasForeignKey(x => x.AnuncioId);
+            builder.HasOne(x => x.Anuncio).WithMany(x => x.Interesses).HasForeignKey(x => x.AnuncioId);
         }
     }
 }

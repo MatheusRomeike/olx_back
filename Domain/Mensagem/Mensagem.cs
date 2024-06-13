@@ -13,7 +13,7 @@
         #region Construtores
         public Mensagem()
         {
-            DataCriacao = DateTime.Now;
+            
         }
         #endregion
 

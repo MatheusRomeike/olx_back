@@ -7,6 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Dtos\NovaPasta1\**" />
+	  <Compile Remove="Dtos\NovaPasta\**" />
+	  <EmbeddedResource Remove="Dtos\NovaPasta1\**" />
+	  <EmbeddedResource Remove="Dtos\NovaPasta\**" />
+	  <None Remove="Dtos\NovaPasta1\**" />
+	  <None Remove="Dtos\NovaPasta\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
 			<PrivateAssets>all</PrivateAssets>

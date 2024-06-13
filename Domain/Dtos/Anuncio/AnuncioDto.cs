@@ -21,5 +21,6 @@ namespace Domain.Dtos.Anuncio
         public List<string> Fotos { get; set; } 
         public Domain.Usuario.Usuario Usuario { get; set; }
         public int CategoriaId {  get; set; }
+        public string DescricaoCategoria { get; set; }
     }
 }

@@ -13,5 +13,7 @@ namespace Application.ViewModels
         public string DataNascimento { get; set; }
         public string Email { get; set; }
         public IFormFile? Foto { get; set; }
+        public string Bairro { get; set; }
+        public string Cidade { get; set;}
     }
 }

@@ -112,8 +112,7 @@ namespace Application.Services
                 UsuarioId = usuarioId,
                 Fotos = new List<string>(),
                 Usuario = anuncio.Usuario,
-                CategoriaId = anuncio.CategoriaId 
-
+                DescricaoCategoria = _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao
             };
 
             anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
@@ -193,7 +192,6 @@ namespace Application.Services
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.Message);
             }
            

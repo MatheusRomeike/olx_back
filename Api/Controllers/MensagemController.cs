@@ -43,6 +43,22 @@ namespace Api.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize]
+        [ProducesResponseType(typeof(MensagemDto), 200)]
+        public IActionResult Create([FromBody]MensagemViewModel model)
+        {
+            try
+            {
+                _mensagemService.Create(model, UsuarioId);
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         #endregion
     }
 }

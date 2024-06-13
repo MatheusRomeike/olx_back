@@ -1,4 +1,5 @@
-﻿using Domain.Dtos.Mensagem;
+﻿using Application.ViewModels;
+using Domain.Dtos.Mensagem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace Application.Interfaces
     public interface IMensagemService
     {
         List<MensagemDto> List(int anuncioId, int usuarioInteressadoId, int usuarioId);
+
+        void Create(MensagemViewModel model, int usuarioLogadoId);
     }
 }

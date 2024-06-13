@@ -94,6 +94,9 @@ namespace Data.Repository
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
 
+            if (orderBy != null)
+                query = orderBy(query);
+
             if (predicate != null)
                 query = query.Where(predicate);
 
@@ -102,9 +105,6 @@ namespace Data.Repository
 
             if (skip != null)
                 query = query.Skip(skip.Value);
-
-            if (orderBy != null)
-                query = orderBy(query);
 
             if (include != null)
             {

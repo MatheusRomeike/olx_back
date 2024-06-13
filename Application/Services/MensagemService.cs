@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.ViewModels;
 using Domain.Dtos.Mensagem;
 using Domain.Mensagem;
 using Domain.Mensagem.Contracts;
@@ -32,6 +33,7 @@ namespace Application.Services
                     Texto = s.Texto,
                     DataCriacao = s.DataCriacao,
                     Usuario = new Domain.Usuario.Usuario() { Nome = s.Usuario.Nome },
+                    UsuarioAutorId = s.UsuarioAutorId,
                     Anuncio = new Domain.Anuncio.Anuncio()
                     {
                         Usuario = new Domain.Usuario.Usuario()
@@ -45,10 +47,33 @@ namespace Application.Services
                 {
                     Texto = x.Texto,
                     DataCriacao = x.DataCriacao,
-                    Tipo = usuarioInteressadoId == usuarioId ? "received" : "sent",
-                    Autor = usuarioInteressadoId == usuarioId ? x.Usuario.Nome : x.Anuncio.Usuario.Nome
-                }).ToList();
+                    Tipo = x.UsuarioAutorId == usuarioId ? "enviado" : "recebido",
+                    Autor = x.UsuarioAutorId == usuarioInteressadoId ? x.Usuario.Nome : x.Anuncio.Usuario.Nome
+                }).OrderBy(x => x.DataCriacao).ToList();
             //return [];
+        }
+        public void Create(MensagemViewModel model, int usuarioLogadoId)
+        {
+            var sequenciaMensagem = _mensagemRepository.LoadLastBy(
+                predicate: p => p.UsuarioId == model.UsuarioId && p.AnuncioId == model.AnuncioId,
+                selector: s => new Mensagem()
+                {
+                    SequenciaMensagem = s.SequenciaMensagem,
+                }, 
+                orderBy: o => o.OrderByDescending(x => x.SequenciaMensagem)
+                )?.SequenciaMensagem ?? 0;
+
+            var mensagem = new Mensagem()
+            {
+                Texto = model.Texto,
+                AnuncioId = model.AnuncioId,
+                UsuarioId = model.UsuarioId,
+                UsuarioAutorId = usuarioLogadoId,
+                DataCriacao = DateTime.Now,
+                SequenciaMensagem = sequenciaMensagem + 1
+            };
+
+            _mensagemRepository.Add(mensagem);
         }
         #endregion
 

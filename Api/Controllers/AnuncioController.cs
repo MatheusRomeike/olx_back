@@ -34,8 +34,8 @@ namespace Api.Controllers
             try
             {
                 model.UsuarioId = UsuarioId;
-                _anuncioService.Add(model);
-                return Ok(true);
+                var id = _anuncioService.Add(model);
+                return Ok(id);
             }
             catch (Exception ex)
             {
@@ -118,6 +118,37 @@ namespace Api.Controllers
             {
                 var anuncio = _anuncioService.LoadByUsuario(UsuarioId);
                 return Ok(anuncio);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("LoadCategorias")]
+        [Authorize]
+        public IActionResult LoadCategorias()
+        {
+            try
+            {
+                var anuncio = _anuncioService.LoadCategorias();
+                return Ok(anuncio);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("AddFotos")]
+        [Authorize]
+        public IActionResult AddFotos([FromForm] AnuncioViewModel model)
+        {
+            try
+            {
+                model.UsuarioId = UsuarioId;
+                _anuncioService.InserirFotoAsync(model);
+                return Ok(true);
             }
             catch (Exception ex)
             {

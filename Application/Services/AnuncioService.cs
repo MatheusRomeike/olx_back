@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Domain.Dtos.Usuario;
 using Domain.FotoAnuncio.Contracts;
+using Domain.Categoria.Contracts;
+using Domain.Dtos.Categoria;
+using Domain.Categoria;
 
 namespace Application.Services
 {
@@ -27,22 +30,24 @@ namespace Application.Services
         private readonly IAmazonS3Service _amazonS3Service;
         private readonly IFotoAnuncioRepository _fotoAnuncioRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ICategoriaRepository _categoriaRepository;
 
         #endregion
 
         #region Construtor
-        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository)
+        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository, ICategoriaRepository categoriaRepository)
         {
             _anuncioRepository = anuncioRepository;
             _fotoAnuncioService = fotoAnuncioService;
             _amazonS3Service = amazonS3Service;
             _fotoAnuncioRepository = fotoAnuncioRepository;
             _usuarioRepository = usuarioRepository;
+            _categoriaRepository = categoriaRepository;
         }
         #endregion
 
         #region Métodos
-        public void Add(AnuncioViewModel anuncioViewModel)
+        public async Task<int> Add(AnuncioViewModel anuncioViewModel)
         {
             try
             {
@@ -53,20 +58,14 @@ namespace Application.Services
                     Preco = anuncioViewModel.Preco,
                     EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
                     DataCriacao = DateTime.Now,
-                    UsuarioId = anuncioViewModel.UsuarioId
+                    UsuarioId = anuncioViewModel.UsuarioId,
+                    CategoriaId = anuncioViewModel.CategoriaId
+                    
                 };
 
                 _anuncioRepository.Add(anuncio);
 
-
-                if (anuncioViewModel.Foto1 != null)
-                {
-                    var files = AgruparFotos(anuncioViewModel);
-                    foreach (var item in files)
-                    {
-                        _fotoAnuncioService.AddArchiveAsync(anuncio.AnuncioId, item);
-                    }
-                }
+                return anuncio.AnuncioId;
             }
             catch (Exception e)
             {
@@ -112,7 +111,9 @@ namespace Application.Services
                 Titulo = anuncio.Titulo,
                 UsuarioId = usuarioId,
                 Fotos = new List<string>(),
-                Usuario = anuncio.Usuario
+                Usuario = anuncio.Usuario,
+                CategoriaId = anuncio.CategoriaId 
+
             };
 
             anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
@@ -172,6 +173,30 @@ namespace Application.Services
                     Titulo = x.Titulo,
                     EstadoAnuncio = x.EstadoAnuncio
                 }).ToList();
+        }
+
+        public List<CategoriaDto> LoadCategorias()
+        {
+            return _categoriaRepository.LoadAll()
+                                       .Select(x => new CategoriaDto
+                                       {
+                                           Descricao = x.Descricao,
+                                           Id = x.CategoriaId
+                                       }).ToList();
+        }
+
+        public async Task InserirFotoAsync(AnuncioViewModel anuncioViewModel)
+        {
+            try
+            {
+                    await _fotoAnuncioService.AddArchiveAsync((int)anuncioViewModel.AnuncioId, anuncioViewModel.Foto, (int)anuncioViewModel.SequenciaFoto);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+           
         }
     }
 

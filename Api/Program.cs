@@ -149,7 +149,8 @@ void ConfigureServices(IServiceCollection services)
     string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
     services.AddDbContext<DataContext>(options =>
-                    options.UseNpgsql(connectionString));
+                    options.UseNpgsql(connectionString),
+    ServiceLifetime.Scoped);
     #endregion
 
     services.AddScoped<IUnitOfWork, UnitOfWork>();

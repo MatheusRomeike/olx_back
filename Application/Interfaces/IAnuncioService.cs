@@ -1,6 +1,7 @@
 ﻿using Application.ViewModels;
 using Domain.Anuncio;
 using Domain.Dtos.Anuncio;
+using Domain.Dtos.Categoria;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Application.Interfaces
 {
     public interface IAnuncioService
     {
-        void Add(AnuncioViewModel anuncioViewModel);
+        Task<int> Add(AnuncioViewModel anuncioViewModel);
         Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId);
 
         void Update(AnuncioViewModel anuncioViewModel);
@@ -21,6 +22,10 @@ namespace Application.Interfaces
         List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId);
 
         List<Anuncio> LoadByUsuario(int usuarioId);
+        List<CategoriaDto> LoadCategorias();
+        Task InserirFotoAsync(AnuncioViewModel anuncioViewModel);
+
+
 
     }
 }

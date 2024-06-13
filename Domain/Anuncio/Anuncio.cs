@@ -1,4 +1,4 @@
-﻿using Domain.Anuncio.Enums;
+﻿using Domain.Anuncio.Enums; 
 
 namespace Domain.Anuncio
 {
@@ -12,6 +12,8 @@ namespace Domain.Anuncio
         public decimal Preco { get; set; }
         public EstadoAnuncio EstadoAnuncio { get; set; }
         public DateTime DataCriacao { get; set; }
+        public int CategoriaId { get; set; }    
+
         #endregion
 
         #region Construtor
@@ -23,8 +25,9 @@ namespace Domain.Anuncio
 
         #region Relacionamentos
         public virtual Usuario.Usuario Usuario { get; set; }
+        //public virtual Categoria.Categoria Categoria { get; set; }
         public virtual List<FotoAnuncio.FotoAnuncio> FotosAnuncio { get; set; }
-        public virtual List<AnuncioCategoria.AnuncioCategoria> AnuncioCategorias { get; set; }
+        //public virtual List<AnuncioCategoria.AnuncioCategoria> AnuncioCategorias { get; set; }
         public virtual List<Interesse.Interesse> Interesses { get; set; }
         public virtual List<Mensagem.Mensagem> Mensagens { get; set; }
         #endregion

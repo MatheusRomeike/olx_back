@@ -129,8 +129,7 @@ namespace Application.Services
                     Titulo = anuncio.Titulo,
                     Fotos = new List<string>()
                     {
-                        "https://olx-bucket-free.s3.amazonaws.com/adimages/0/1",
-                        //$"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncio.AnuncioId}/1"
+                        $"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncio.AnuncioId}/1"
                     },
                     Usuario = anuncio.Usuario,
                     DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null
@@ -190,6 +189,7 @@ namespace Application.Services
             {
                 var byteArray = await _amazonS3Service.GetFileAsync($"adimages/{anuncioId}/{item.SequenciaFotoAnuncio}");
                 var foto = byteArray == null ? null : $"data:image/jpeg;base64,{Convert.ToBase64String(byteArray)}";
+                //var foto = $"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncioId}/{item.SequenciaFotoAnuncio}";
                 retorno.Fotos.Add(foto);
             }
 

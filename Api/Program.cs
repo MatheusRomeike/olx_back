@@ -129,10 +129,11 @@ if (app.Environment.IsDevelopment())
 //app.UseCors(b => b.WithOrigins(urlDev, urlHML, urlPROD));
 
 var devCliente = "http://localhost:4200";
+var prodCliente = "http://35.168.2.2";
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
-    .AllowAnyHeader().WithOrigins(devCliente));
+    .AllowAnyHeader().WithOrigins(devCliente, prodCliente));
 #endregion
 
 app.UseHttpsRedirection();

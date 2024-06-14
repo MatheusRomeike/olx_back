@@ -36,7 +36,7 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpPost("Add")]
         [Authorize]
-        public IActionResult Add([FromForm] AnuncioViewModel anuncio)
+        public IActionResult Add([FromBody] AnuncioViewModel anuncio)
         {
             try
             {

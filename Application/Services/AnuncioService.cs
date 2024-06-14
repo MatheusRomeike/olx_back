@@ -209,7 +209,7 @@ namespace Application.Services
             anuncioExistente.Titulo = anuncioViewModel.Titulo;
             anuncioExistente.Descricao = anuncioViewModel.Descricao;
             anuncioExistente.Preco = anuncioViewModel.Preco;
-            anuncioExistente.EstadoAnuncio = anuncioViewModel.EstadoAnuncio;
+            anuncioExistente.EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo;
 
             _anuncioRepository.Update(anuncioExistente);
         }

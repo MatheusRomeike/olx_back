@@ -17,11 +17,11 @@ namespace Application.Interfaces
 
         void Update(AnuncioViewModel anuncioViewModel);
 
-        void Delete(int anuncioId, int usuarioId);
+        void AlterarStatus(AlterarStatusAnuncioViewModel model, int usuarioId);
 
         List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId);
 
-        Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model);
+        Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model, int usuarioId);
 
         List<Anuncio> LoadByUsuario(int usuarioId);
         List<CategoriaDto> LoadCategorias();

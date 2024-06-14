@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
 using Application.ViewModels;
+using Domain.Anuncio.Enums;
 using Domain.Dtos.Anuncio;
 using Domain.Dtos.Usuario;
 using Microsoft.AspNetCore.Authorization;
@@ -77,7 +78,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncios = await _anuncioService.List(model);
+                var anuncios = await _anuncioService.List(model, UsuarioId);
                 return Ok(anuncios);
             }
             catch (Exception ex)
@@ -115,7 +116,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncio =  await _anuncioService.LoadByIdAsync(anuncioId, usuarioId == 0  ? UsuarioId : usuarioId);
+                var anuncio = await _anuncioService.LoadByIdAsync(anuncioId, usuarioId == 0 ? UsuarioId : usuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)
@@ -130,13 +131,13 @@ namespace Api.Controllers
         /// </summary>
         /// <param name="anuncioId"></param>
         /// <returns></returns>
-        [HttpDelete("Delete")]
+        [HttpPatch("AlterarStatus")]
         [Authorize]
-        public IActionResult Delete([FromBody] int anuncioId)
+        public IActionResult AlterarStatus([FromBody] AlterarStatusAnuncioViewModel model)
         {
             try
             {
-                _anuncioService.Delete(anuncioId, UsuarioId);
+                _anuncioService.AlterarStatus(model, UsuarioId);
                 return Ok(true);
             }
             catch (Exception ex)

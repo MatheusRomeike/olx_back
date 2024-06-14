@@ -10,13 +10,6 @@ namespace Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AnuncioCategoria_Anuncio_AnuncioId1",
-                table: "AnuncioCategoria");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AnuncioCategoria_AnuncioId1",
-                table: "AnuncioCategoria");
 
             migrationBuilder.DropColumn(
                 name: "AnuncioId1",

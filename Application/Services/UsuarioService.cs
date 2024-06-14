@@ -52,6 +52,8 @@ namespace Application.Services
                 Senha = senhaEncrypt,
                 Nome = usuario.Nome,
                 DataNascimento = usuario.DataNascimento,
+                Bairro = "",
+                Cidade = ""
             };
 
             _usuarioRepository.Add(novoUsuario);

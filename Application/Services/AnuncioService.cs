@@ -96,7 +96,7 @@ namespace Application.Services
             return files;
         }
 
-        public async Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model)
+        public async Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model, int usuarioId)
         {
             var anunciosDto = new List<AnuncioDto>();
             Expression<Func<Anuncio, bool>> predicate = x => x.EstadoAnuncio == Domain.Anuncio.Enums.EstadoAnuncio.Ativo;
@@ -111,6 +111,7 @@ namespace Application.Services
             predicate = AndAlsoWhen(predicate, x => x.CategoriaId == model.CategoriaId, () => model.CategoriaId.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco >= model.PrecoMin, () => model.PrecoMin.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.UsuarioId != usuarioId, () => true);
 
             var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy);
 
@@ -121,6 +122,7 @@ namespace Application.Services
             {
                 anunciosDto.Add(new AnuncioDto()
                 {
+                    UsuarioId = anuncio.UsuarioId,
                     Descricao = anuncio.Descricao,
                     Preco = anuncio.Preco,
                     AnuncioId = anuncio.AnuncioId,
@@ -210,13 +212,13 @@ namespace Application.Services
             _anuncioRepository.Update(anuncioExistente);
         }
 
-        public void Delete(int anuncioId, int usuarioId)
+        public void AlterarStatus(AlterarStatusAnuncioViewModel model, int usuarioId)
         {
-            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId);
+            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == model.AnuncioId && x.UsuarioId == usuarioId);
 
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");
-            anuncio.EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Inativo;
+            anuncio.EstadoAnuncio = model.Estado;
             _anuncioRepository.Update(anuncio);
         }
 

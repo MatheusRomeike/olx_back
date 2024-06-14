@@ -112,7 +112,7 @@ namespace Application.Services
                 UsuarioId = usuarioId,
                 Fotos = new List<string>(),
                 Usuario = anuncio.Usuario,
-                DescricaoCategoria = _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao,
+                DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null,
                 CategoriaId = anuncio.CategoriaId,
             };
 
@@ -157,7 +157,7 @@ namespace Application.Services
 
         public List<Anuncio> LoadByUsuario(int usuarioId)
         {
-            return _anuncioRepository.LoadAll(x => x.UsuarioId == usuarioId).ToList();
+            return _anuncioRepository.LoadAll(x => x.UsuarioId == usuarioId && x.EstadoAnuncio != Domain.Anuncio.Enums.EstadoAnuncio.Inativo).ToList();
         }
 
         public List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId)

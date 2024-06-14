@@ -97,9 +97,9 @@ namespace Api.Controllers
         /// </summary>
         /// <param name="anuncioId"></param>
         /// <returns></returns>
-        [HttpGet("Delete")]
+        [HttpDelete("Delete")]
         [Authorize]
-        public IActionResult Delete(int anuncioId)
+        public IActionResult Delete([FromBody] int anuncioId)
         {
             try
             {

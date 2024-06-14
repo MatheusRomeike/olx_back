@@ -41,6 +41,21 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet()]
+        [Authorize]
+        [ProducesResponseType(typeof(MensagemDto), 200)]
+        public IActionResult List(int anuncioId, int usuarioInteressadoId)
+        {
+            try
+            {
+                return Ok(_interesseService.List( UsuarioId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         #endregion
     }
 }

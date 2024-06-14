@@ -1,7 +1,10 @@
 ﻿using Application.Interfaces;
 using Application.ViewModels;
+using Domain.Anuncio.Contracts;
+using Domain.Dtos.Interesse;
 using Domain.Interesse.Contracts;
 using Domain.Mensagem.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +17,14 @@ namespace Application.Services
     {
         #region Atributos
         private readonly IInteresseRepository _interesseRepository;
+        private readonly IAnuncioRepository _anuncioRepository;
         #endregion
 
         #region Construtor
-        public InteresseService(IInteresseRepository interesseRepository)
+        public InteresseService(IInteresseRepository interesseRepository, IAnuncioRepository anuncioRepository)
         {
             _interesseRepository = interesseRepository;
+            _anuncioRepository = anuncioRepository;
         }
         #endregion
 
@@ -42,6 +47,15 @@ namespace Application.Services
                 });
             }
         }
+
+        public List<InteresseDto> List(int usuarioId)
+        {
+            return _interesseRepository.LoadAll(
+                predicate: x => x.UsuarioId == usuarioId,
+                include: x => x.Include(i => i.Anuncio).Select(s => );
+
+            return [];
+        } 
         #endregion
     }
 }

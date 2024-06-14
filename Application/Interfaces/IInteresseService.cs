@@ -1,4 +1,5 @@
 ﻿using Application.ViewModels;
+using Domain.Dtos.Interesse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Application.Interfaces
     public interface IInteresseService
     {
         void Toggle(InteresseViewModel model, int usuarioLogadoId);
+        public List<InteresseDto> List(int usuarioLogadoId);
     }
 }

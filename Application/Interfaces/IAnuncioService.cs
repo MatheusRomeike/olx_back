@@ -20,7 +20,7 @@ namespace Application.Interfaces
 
         List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId);
 
-        Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model);
+        Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model, int usuarioId);
 
         List<Anuncio> LoadByUsuario(int usuarioId);
 

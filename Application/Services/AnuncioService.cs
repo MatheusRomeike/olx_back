@@ -96,7 +96,7 @@ namespace Application.Services
             return files;
         }
 
-        public async Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model)
+        public async Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model, int usuarioId)
         {
             var anunciosDto = new List<AnuncioDto>();
             Expression<Func<Anuncio, bool>> predicate = x => x.EstadoAnuncio == Domain.Anuncio.Enums.EstadoAnuncio.Ativo;
@@ -112,6 +112,7 @@ namespace Application.Services
             predicate = AndAlsoWhen(predicate, x => x.AnuncioCategorias.Select(x => x.CategoriaId).Contains(model.CategoriaId ?? 0),() => model.CategoriaId.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco >= model.PrecoMin, () => model.PrecoMin.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.UsuarioId != usuarioId, () => usuarioId != null);
 
             var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy);
 

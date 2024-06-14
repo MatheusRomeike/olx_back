@@ -66,7 +66,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncios = await _anuncioService.List(model);
+                var anuncios = await _anuncioService.List(model, UsuarioId);
                 return Ok(anuncios);
             }
             catch (Exception ex)

@@ -17,7 +17,7 @@ namespace Application.Interfaces
 
         void Update(AnuncioViewModel anuncioViewModel);
 
-        void Delete(int anuncioId);
+        void Delete(int anuncioId, int usuarioId);
 
         List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId);
 

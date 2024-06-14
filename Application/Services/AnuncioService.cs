@@ -145,9 +145,9 @@ namespace Application.Services
             _anuncioRepository.Update(anuncioExistente);
         }
 
-        public void Delete(int anuncioId)
+        public void Delete(int anuncioId, int usuarioId)
         {
-            var anuncio = _anuncioRepository.LoadById(anuncioId);
+            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId);
 
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");

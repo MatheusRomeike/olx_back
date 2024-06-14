@@ -179,5 +179,6 @@ void ConfigureServices(IServiceCollection services)
     builder.Services.AddScoped<IAnuncioService, AnuncioService>();
     builder.Services.AddScoped<IUsuarioService, UsuarioService>();
     builder.Services.AddScoped<IMensagemService, MensagemService>();
+    builder.Services.AddScoped<IInteresseService, InteresseService>();
     #endregion
 }

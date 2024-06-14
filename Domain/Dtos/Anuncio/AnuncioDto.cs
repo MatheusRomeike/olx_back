@@ -43,5 +43,8 @@ namespace Domain.Dtos.Anuncio
 
         [DefaultValueAttribute("Eletrônicos")]
         public string DescricaoCategoria { get; set; }
+
+        [DefaultValueAttribute(false)]
+        public bool Interesse { get; set; }
     }
 }

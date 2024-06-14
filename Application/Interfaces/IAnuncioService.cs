@@ -13,7 +13,7 @@ namespace Application.Interfaces
     public interface IAnuncioService
     {
         Task<int> Add(AnuncioViewModel anuncioViewModel);
-        Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId);
+        Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId, int usuarioLogadoId);
 
         void Update(AnuncioViewModel anuncioViewModel);
 

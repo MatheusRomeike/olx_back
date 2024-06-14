@@ -116,7 +116,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncio = await _anuncioService.LoadByIdAsync(anuncioId, usuarioId == 0 ? UsuarioId : usuarioId);
+                var anuncio = await _anuncioService.LoadByIdAsync(anuncioId, usuarioId == 0 ? UsuarioId : usuarioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

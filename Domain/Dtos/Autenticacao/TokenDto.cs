@@ -10,5 +10,7 @@ namespace Domain.Dtos.Autenticacao
     {
         public string AccessToken { get; set; }
         public long ExpiresIn { get; set; }
+        public string NomeUsuario { get; set; }
+        public int UsuarioId { get; set; }
     }
 }

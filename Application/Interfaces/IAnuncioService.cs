@@ -23,6 +23,7 @@ namespace Application.Interfaces
         Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model);
 
         List<Anuncio> LoadByUsuario(int usuarioId);
+        string GetTituloAnuncio(int anuncioId);
 
     }
 }

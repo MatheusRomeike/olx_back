@@ -26,7 +26,7 @@ namespace Api.Controllers
             _mensagemService = mensagemService;
         }
         #endregion
-        
+
         #region Métodos
         [HttpGet("Chat")]
         [Authorize]
@@ -43,10 +43,25 @@ namespace Api.Controllers
             }
         }
 
+        [HttpGet("GetConversas")]
+        [Authorize]
+        [ProducesResponseType(typeof(MensagemDto), 200)]
+        public IActionResult GetConversas()
+        {
+            try
+            {
+                return Ok(_mensagemService.GetConversas(UsuarioId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Authorize]
         [ProducesResponseType(typeof(MensagemDto), 200)]
-        public IActionResult Create([FromBody]MensagemViewModel model)
+        public IActionResult Create([FromBody] MensagemViewModel model)
         {
             try
             {

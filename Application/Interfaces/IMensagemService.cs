@@ -13,5 +13,6 @@ namespace Application.Interfaces
         List<MensagemDto> List(int anuncioId, int usuarioInteressadoId, int usuarioId);
 
         void Create(MensagemViewModel model, int usuarioLogadoId);
+        List<ConversasDto> GetConversas(int usuarioId);
     }
 }

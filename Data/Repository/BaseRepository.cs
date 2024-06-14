@@ -8,7 +8,7 @@ namespace Data.Repository
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         #region Atributos
-        private readonly DataContext context;
+        public DataContext context;
         #endregion
 
         #region Construtor

@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Dtos.Usuario;
 using Domain.FotoAnuncio.Contracts;
 using System.Linq.Expressions;
+using Data.Repository;
 
 namespace Application.Services
 {
@@ -74,7 +75,7 @@ namespace Application.Services
 
                 throw new Exception(e.Message);
             }
-         
+
         }
 
         private List<IFormFile> AgruparFotos(AnuncioViewModel model)
@@ -102,14 +103,14 @@ namespace Application.Services
             Expression<Func<Anuncio, bool>> predicate = x => x.EstadoAnuncio == Domain.Anuncio.Enums.EstadoAnuncio.Ativo;
             Func<IQueryable<Anuncio>, IOrderedQueryable<Anuncio>> orderBy = x => x.OrderByDescending(x => x.DataCriacao);
 
-            if(model.Titulo.HasValue)
+            if (model.Titulo.HasValue)
                 orderBy = model.Titulo.Value == Domain.Anuncio.Enums.Ordem.DESC ? x => x.OrderByDescending(y => y.Titulo) : x => x.OrderBy(z => z.Titulo);
 
             if (model.Preco.HasValue)
                 orderBy = model.Preco.Value == Domain.Anuncio.Enums.Ordem.DESC ? x => x.OrderByDescending(y => y.Preco) : x => x.OrderBy(z => z.Preco);
 
             //if(model.CategoriaId.HasValue)
-            predicate = AndAlsoWhen(predicate, x => x.AnuncioCategorias.Select(x => x.CategoriaId).Contains(model.CategoriaId ?? 0),() => model.CategoriaId.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.AnuncioCategorias.Select(x => x.CategoriaId).Contains(model.CategoriaId ?? 0), () => model.CategoriaId.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco >= model.PrecoMin, () => model.PrecoMin.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
 
@@ -134,7 +135,7 @@ namespace Application.Services
                 });
             }
 
-            
+
 
             //anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
             //foreach (var item in anuncio.FotosAnuncio)
@@ -147,7 +148,7 @@ namespace Application.Services
             return anunciosDto;
         }
 
-        public  Expression<Func<T, bool>> AndAlsoWhen<T>(
+        public Expression<Func<T, bool>> AndAlsoWhen<T>(
      Expression<Func<T, bool>> baseCondition,
     Expression<Func<T, bool>> andAlsoCondition,
     Func<bool> whenCondition)
@@ -237,6 +238,11 @@ namespace Application.Services
                     Titulo = x.Titulo,
                     EstadoAnuncio = x.EstadoAnuncio
                 }).ToList();
+        }
+
+        public string GetTituloAnuncio(int anuncioId)
+        {
+            return _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId, selector: s => new Anuncio() { Titulo = s.Titulo })?.Titulo;
         }
     }
 

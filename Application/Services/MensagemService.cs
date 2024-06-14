@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class MensagemService: IMensagemService
+    public class MensagemService : IMensagemService
     {
         #region Atributos
         private readonly IMensagemRepository _mensagemRepository;
@@ -26,10 +26,12 @@ namespace Application.Services
         #endregion
 
         #region Métodos
-        public List<MensagemDto> List(int anuncioId, int usuarioInteressadoId, int usuarioId) {
+        public List<MensagemDto> List(int anuncioId, int usuarioInteressadoId, int usuarioId)
+        {
             return _mensagemRepository.LoadAll(
                 predicate: p => p.UsuarioId == usuarioInteressadoId && p.AnuncioId == anuncioId,
-                selector: s => new Mensagem() {
+                selector: s => new Mensagem()
+                {
                     Texto = s.Texto,
                     DataCriacao = s.DataCriacao,
                     Usuario = new Domain.Usuario.Usuario() { Nome = s.Usuario.Nome },
@@ -59,7 +61,7 @@ namespace Application.Services
                 selector: s => new Mensagem()
                 {
                     SequenciaMensagem = s.SequenciaMensagem,
-                }, 
+                },
                 orderBy: o => o.OrderByDescending(x => x.SequenciaMensagem)
                 )?.SequenciaMensagem ?? 0;
 
@@ -74,6 +76,11 @@ namespace Application.Services
             };
 
             _mensagemRepository.Add(mensagem);
+        }
+
+        public List<ConversasDto> GetConversas(int usuarioId)
+        {
+            return _mensagemRepository.GetConversas(usuarioId);
         }
         #endregion
 

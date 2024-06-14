@@ -75,6 +75,22 @@ namespace Api.Controllers
             }
         }
 
+        [HttpGet("GetTituloAnuncio")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> GetTituloAnuncio(int anuncioId)
+        {
+            try
+            {
+                var anuncios = _anuncioService.GetTituloAnuncio(anuncioId);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("LoadById")]
         [Authorize]
         [ProducesResponseType(typeof(AnuncioDto), 200)]
@@ -82,7 +98,7 @@ namespace Api.Controllers
         {
             try
             {
-                var anuncio =  await _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
+                var anuncio = await _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)

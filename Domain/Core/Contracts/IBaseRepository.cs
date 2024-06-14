@@ -105,5 +105,18 @@ namespace Domain.Core.Contracts
         /// <param name="entity"></param>
         /// <param name="properties"></param>
         void PartialUpdate(T entity, params Expression<Func<T, object>>[] properties);
+
+        /// <summary>
+        /// Método para desanexar uma entidade do contexto
+        /// </summary>
+        /// <param name="entity"></param>
+        void Detach(T entity);
+
+        /// <summary>
+        /// Método para encontrar uma entidade assincronamente
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
+        Task<T?> FindAsync(params object[] keys);
     }
 }

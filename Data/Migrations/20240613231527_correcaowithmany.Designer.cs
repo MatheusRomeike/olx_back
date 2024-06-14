@@ -3,6 +3,7 @@ using System;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240613231527_correcaowithmany")]
+    partial class correcaowithmany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,9 +136,6 @@ namespace Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int>("UsuarioAutorId")
-                        .HasColumnType("integer");
-
                     b.HasKey("UsuarioId", "AnuncioId", "SequenciaMensagem");
 
                     b.HasIndex("AnuncioId");
@@ -150,14 +150,6 @@ namespace Data.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UsuarioId"));
-
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("DataNascimento")
                         .IsRequired()

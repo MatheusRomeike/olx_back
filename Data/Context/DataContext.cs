@@ -1,6 +1,5 @@
 ﻿using Data.Configuration;
 using Domain.Anuncio;
-using Domain.AnuncioCategoria;
 using Domain.Categoria;
 using Domain.FotoAnuncio;
 using Domain.Interesse;
@@ -39,7 +38,6 @@ namespace Data.Context
         {
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
             modelBuilder.ApplyConfiguration(new AnuncioConfiguration());
-            modelBuilder.ApplyConfiguration(new AnuncioCategoriaConfiguration());
             modelBuilder.ApplyConfiguration(new CategoriaConfiguration());
             modelBuilder.ApplyConfiguration(new FotoAnuncioConfiguration());
             modelBuilder.ApplyConfiguration(new InteresseConfiguration());
@@ -50,7 +48,6 @@ namespace Data.Context
         #region Objetos
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Anuncio> Anuncio { get; set; }
-        public DbSet<AnuncioCategoria> AnuncioCategoria { get; set; }
         public DbSet<Categoria> Categoria { get; set; }
         public DbSet<FotoAnuncio> FotoAnuncio { get; set; }
         public DbSet<Interesse> Interesse { get; set; }

@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Domain.Dtos.Usuario;
 using Domain.FotoAnuncio.Contracts;
+using Domain.Categoria.Contracts;
+using Domain.Dtos.Categoria;
+using Domain.Categoria;
 using System.Linq.Expressions;
 using Data.Repository;
 
@@ -29,22 +32,24 @@ namespace Application.Services
         private readonly IAmazonS3Service _amazonS3Service;
         private readonly IFotoAnuncioRepository _fotoAnuncioRepository;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly ICategoriaRepository _categoriaRepository;
 
         #endregion
 
         #region Construtor
-        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository)
+        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository, ICategoriaRepository categoriaRepository)
         {
             _anuncioRepository = anuncioRepository;
             _fotoAnuncioService = fotoAnuncioService;
             _amazonS3Service = amazonS3Service;
             _fotoAnuncioRepository = fotoAnuncioRepository;
             _usuarioRepository = usuarioRepository;
+            _categoriaRepository = categoriaRepository;
         }
         #endregion
 
         #region Métodos
-        public void Add(AnuncioViewModel anuncioViewModel)
+        public async Task<int> Add(AnuncioViewModel anuncioViewModel)
         {
             try
             {
@@ -55,20 +60,14 @@ namespace Application.Services
                     Preco = anuncioViewModel.Preco,
                     EstadoAnuncio = Domain.Anuncio.Enums.EstadoAnuncio.Ativo,
                     DataCriacao = DateTime.Now,
-                    UsuarioId = anuncioViewModel.UsuarioId
+                    UsuarioId = anuncioViewModel.UsuarioId,
+                    CategoriaId = anuncioViewModel.CategoriaId
+
                 };
 
                 _anuncioRepository.Add(anuncio);
 
-
-                if (anuncioViewModel.Foto1 != null)
-                {
-                    var files = AgruparFotos(anuncioViewModel);
-                    foreach (var item in files)
-                    {
-                        _fotoAnuncioService.AddArchiveAsync(anuncio.AnuncioId, item);
-                    }
-                }
+                return anuncio.AnuncioId;
             }
             catch (Exception e)
             {
@@ -109,8 +108,7 @@ namespace Application.Services
             if (model.Preco.HasValue)
                 orderBy = model.Preco.Value == Domain.Anuncio.Enums.Ordem.DESC ? x => x.OrderByDescending(y => y.Preco) : x => x.OrderBy(z => z.Preco);
 
-            //if(model.CategoriaId.HasValue)
-            predicate = AndAlsoWhen(predicate, x => x.AnuncioCategorias.Select(x => x.CategoriaId).Contains(model.CategoriaId ?? 0), () => model.CategoriaId.HasValue);
+            predicate = AndAlsoWhen(predicate, x => x.CategoriaId == model.CategoriaId, () => model.CategoriaId.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco >= model.PrecoMin, () => model.PrecoMin.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
 
@@ -178,7 +176,9 @@ namespace Application.Services
                 Titulo = anuncio.Titulo,
                 UsuarioId = usuarioId,
                 Fotos = new List<string>(),
-                Usuario = anuncio.Usuario
+                Usuario = anuncio.Usuario,
+                DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null,
+                CategoriaId = anuncio.CategoriaId,
             };
 
             anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();
@@ -210,9 +210,9 @@ namespace Application.Services
             _anuncioRepository.Update(anuncioExistente);
         }
 
-        public void Delete(int anuncioId)
+        public void Delete(int anuncioId, int usuarioId)
         {
-            var anuncio = _anuncioRepository.LoadById(anuncioId);
+            var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId);
 
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");
@@ -222,7 +222,7 @@ namespace Application.Services
 
         public List<Anuncio> LoadByUsuario(int usuarioId)
         {
-            return _anuncioRepository.LoadAll(x => x.UsuarioId == usuarioId).ToList();
+            return _anuncioRepository.LoadAll(x => x.UsuarioId == usuarioId && x.EstadoAnuncio != Domain.Anuncio.Enums.EstadoAnuncio.Inativo).ToList();
         }
 
         public List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId)
@@ -238,6 +238,29 @@ namespace Application.Services
                     Titulo = x.Titulo,
                     EstadoAnuncio = x.EstadoAnuncio
                 }).ToList();
+        }
+
+        public List<CategoriaDto> LoadCategorias()
+        {
+            return _categoriaRepository.LoadAll()
+                                       .Select(x => new CategoriaDto
+                                       {
+                                           Descricao = x.Descricao,
+                                           Id = x.CategoriaId
+                                       }).ToList();
+        }
+
+        public async Task InserirFotoAsync(AnuncioViewModel anuncioViewModel)
+        {
+            try
+            {
+                await _fotoAnuncioService.AddArchiveAsync((int)anuncioViewModel.AnuncioId, anuncioViewModel.Foto, (int)anuncioViewModel.SequenciaFoto);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
         }
 
         public string GetTituloAnuncio(int anuncioId)

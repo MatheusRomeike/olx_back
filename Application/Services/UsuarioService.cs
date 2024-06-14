@@ -103,6 +103,8 @@ namespace Application.Services
                     usuarioAtual.Nome = usuario.Nome;
                     usuarioAtual.DataNascimento = usuario.DataNascimento;
                     usuarioAtual.Email = usuario.Email;
+                    usuarioAtual.Bairro = usuario.Bairro;
+                    usuarioAtual.Cidade = usuario.Cidade;
                     _usuarioRepository.Update(usuarioAtual);
 
                     if (usuario.Foto != null)
@@ -146,7 +148,9 @@ namespace Application.Services
                 Nome = usuario.Nome,
                 DataNascimento = usuario.DataNascimento,
                 Email = usuario.Email,
-                Foto = byteArray == null ? null : $"data:image/jpeg;base64,{Convert.ToBase64String(byteArray)}"
+                Foto = byteArray == null ? null : $"data:image/jpeg;base64,{Convert.ToBase64String(byteArray)}",
+                Bairro = usuario.Bairro,
+                Cidade  = usuario.Cidade
             };
 
             return usuarioViewModel;

@@ -1,5 +1,6 @@
 ﻿using Data.Context;
 using Domain.Core.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
@@ -130,6 +131,20 @@ namespace Data.Repository
             {
                 context.Entry(entity).Property(property).IsModified = true;
             }
+        }
+
+        public void Detach(T entity)
+        {
+            var entry = context.Entry(entity);
+            if (entry != null)
+            {
+                entry.State = EntityState.Detached;
+            }
+        }
+
+        public async Task<T?> FindAsync(params object[] keys)
+        {
+            return await context.Set<T>().FindAsync(keys);
         }
         #endregion
     }

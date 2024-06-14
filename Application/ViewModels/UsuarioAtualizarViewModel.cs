@@ -17,5 +17,7 @@ namespace Application.ViewModels
         [DefaultValueAttribute("matheus@gmail.com")]
         public string Email { get; set; }
         public IFormFile? Foto { get; set; }
+        public string Bairro { get; set; }
+        public string Cidade { get; set;}
     }
 }

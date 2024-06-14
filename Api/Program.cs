@@ -4,7 +4,6 @@ using Application.Services;
 using Application.Token;
 using Data.Repository;
 using Domain.Anuncio.Contracts;
-using Domain.AnuncioCategoria.Contracts;
 using Domain.AutoComplete.Contracts;
 using Domain.Categoria.Contracts;
 using Domain.FotoAnuncio.Contracts;
@@ -30,7 +29,7 @@ AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 #if DEBUG
 DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env.local"));
 #else
-    DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 #endif
 
 #endregion
@@ -42,7 +41,10 @@ ConfigureServices(builder.Services);
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -154,7 +156,8 @@ void ConfigureServices(IServiceCollection services)
     string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
     services.AddDbContext<DataContext>(options =>
-                    options.UseNpgsql(connectionString));
+                    options.UseNpgsql(connectionString),
+    ServiceLifetime.Scoped);
     #endregion
 
     services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -162,7 +165,6 @@ void ConfigureServices(IServiceCollection services)
     #region Repository
     services.AddTransient<IAutoCompleteRepository, AutoCompleteRepository>();
     services.AddTransient<IUsuarioRepository, UsuarioRepository>();
-    services.AddTransient<IAnuncioCategoriaRepository, AnuncioCategoriaRepository>();
     services.AddTransient<ICategoriaRepository, CategoriaRepository>();
     services.AddTransient<IFotoAnuncioRepository, FotoAnuncioRepository>();
     services.AddTransient<IInteresseRepository, InteresseRepository>();

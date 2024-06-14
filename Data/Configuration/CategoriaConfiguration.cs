@@ -13,7 +13,6 @@ namespace Data.Configuration
             builder.Property(x => x.CategoriaId).ValueGeneratedOnAdd().IsRequired();
             builder.Property(x => x.Descricao).IsRequired().HasMaxLength(60);
 
-            builder.HasMany(x => x.AnunciosCategorias).WithOne().HasForeignKey(x => x.CategoriaId);
         }
     }
 }

@@ -3,6 +3,8 @@ using Domain.FotoAnuncio.Contracts;
 using Microsoft.AspNetCore.Http;
 using Data.Contracts;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Application.Services
 {
@@ -27,43 +29,41 @@ namespace Application.Services
         #endregion
 
         #region Métodos
-        public async Task<bool> AddArchiveAsync(int anuncioId, IFormFile file)
+        public async Task<bool> AddArchiveAsync(int anuncioId, IFormFile file, int sequencia)
         {
-            using (var transaction = _unitOfWork.EFBeginTransaction())
+            var key = $"adimages/{anuncioId}/{sequencia}";
+            try
             {
-                var sequenciaFotoAnuncio = _fotoAnuncioRepository.LoadLastBy(
-                       predicate: p => p.AnuncioId == anuncioId,
-                       selector: s => new Domain.FotoAnuncio.FotoAnuncio()
-                       {
-                           SequenciaFotoAnuncio = s.SequenciaFotoAnuncio
-                       },
-                       orderBy: o => o.OrderBy(x => x.SequenciaFotoAnuncio))?.SequenciaFotoAnuncio ?? 1;
 
-                var key = $"adimages/{anuncioId}/{sequenciaFotoAnuncio}";
-                try
+                var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
+
+                if (!uploadFile)
+                    throw new Exception("Erro ao fazer upload do arquivo.");
+
+                // Verificar e desanexar entidade existente
+                var existingEntity = await _fotoAnuncioRepository.FindAsync(anuncioId, sequencia);
+                if (existingEntity != null)
                 {
-                    var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
-
-                    if (!uploadFile)
-                        throw new Exception("Erro ao fazer upload do arquivo.");
-
-                    _fotoAnuncioRepository.Add(new Domain.FotoAnuncio.FotoAnuncio()
-                    {
-                        AnuncioId = anuncioId,
-                        SequenciaFotoAnuncio = sequenciaFotoAnuncio
-                    });
-                    // transaction.Commit();
-                    _unitOfWork.EFCommit();
-                    return true;
+                    _fotoAnuncioRepository.Detach(existingEntity);
                 }
-                catch (Exception ex)
+
+                _fotoAnuncioRepository.Add(new Domain.FotoAnuncio.FotoAnuncio()
                 {
-                    transaction.Rollback();
-                    await _amazonS3Service.DeleteFileAsync(key);
-                    throw new Exception($"Erro ao salvar foto do anúncio. {ex.Message}");
-                }
+                    AnuncioId = anuncioId,
+                    SequenciaFotoAnuncio = sequencia
+                });
+
+                return true;
             }
+            catch (Exception ex)
+            {
+
+                await _amazonS3Service.DeleteFileAsync(key);
+                throw new Exception($"Erro ao salvar foto do anúncio. {ex.Message}");
+            }
+           
         }
+
 
 
         public async Task<List<byte[]>> GetArchivesAsync(int anuncioId)

@@ -3,6 +3,7 @@ using System;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240613225645_BairroCidadeMigration")]
+    partial class BairroCidadeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,11 +58,36 @@ namespace Data.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("UsuarioId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("AnuncioId");
 
                     b.HasIndex("UsuarioId");
 
+                    b.HasIndex("UsuarioId1");
+
                     b.ToTable("Anuncio");
+                });
+
+            modelBuilder.Entity("Domain.AnuncioCategoria.AnuncioCategoria", b =>
+                {
+                    b.Property<int>("AnuncioId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CategoriaId1")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AnuncioId", "CategoriaId");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("CategoriaId1");
+
+                    b.ToTable("AnuncioCategoria");
                 });
 
             modelBuilder.Entity("Domain.Categoria.Categoria", b =>
@@ -88,7 +116,12 @@ namespace Data.Migrations
                     b.Property<int>("SequenciaFotoAnuncio")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("AnuncioId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("AnuncioId", "SequenciaFotoAnuncio");
+
+                    b.HasIndex("AnuncioId1");
 
                     b.ToTable("FotoAnuncio");
                 });
@@ -101,12 +134,22 @@ namespace Data.Migrations
                     b.Property<int>("AnuncioId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("AnuncioId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("UsuarioId1")
+                        .HasColumnType("integer");
 
                     b.HasKey("UsuarioId", "AnuncioId");
 
                     b.HasIndex("AnuncioId");
+
+                    b.HasIndex("AnuncioId1");
+
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Interesse");
                 });
@@ -125,6 +168,9 @@ namespace Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SequenciaMensagem"));
 
+                    b.Property<int?>("AnuncioId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp without time zone");
 
@@ -133,12 +179,16 @@ namespace Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int>("UsuarioAutorId")
+                    b.Property<int?>("UsuarioId1")
                         .HasColumnType("integer");
 
                     b.HasKey("UsuarioId", "AnuncioId", "SequenciaMensagem");
 
                     b.HasIndex("AnuncioId");
+
+                    b.HasIndex("AnuncioId1");
+
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Mensagem");
                 });
@@ -189,21 +239,54 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Anuncio.Anuncio", b =>
                 {
                     b.HasOne("Domain.Usuario.Usuario", "Usuario")
-                        .WithMany("Anuncios")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Usuario.Usuario", null)
+                        .WithMany("Anuncios")
+                        .HasForeignKey("UsuarioId1");
+
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Domain.AnuncioCategoria.AnuncioCategoria", b =>
+                {
+                    b.HasOne("Domain.Anuncio.Anuncio", "Anuncio")
+                        .WithMany()
+                        .HasForeignKey("AnuncioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Categoria.Categoria", null)
+                        .WithMany("AnunciosCategorias")
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Categoria.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Anuncio");
+
+                    b.Navigation("Categoria");
                 });
 
             modelBuilder.Entity("Domain.FotoAnuncio.FotoAnuncio", b =>
                 {
                     b.HasOne("Domain.Anuncio.Anuncio", "Anuncio")
-                        .WithMany("FotosAnuncio")
+                        .WithMany()
                         .HasForeignKey("AnuncioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Domain.Anuncio.Anuncio", null)
+                        .WithMany("FotosAnuncio")
+                        .HasForeignKey("AnuncioId1");
 
                     b.Navigation("Anuncio");
                 });
@@ -211,16 +294,24 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Interesse.Interesse", b =>
                 {
                     b.HasOne("Domain.Anuncio.Anuncio", "Anuncio")
-                        .WithMany("Interesses")
+                        .WithMany()
                         .HasForeignKey("AnuncioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Usuario.Usuario", "Usuario")
+                    b.HasOne("Domain.Anuncio.Anuncio", null)
                         .WithMany("Interesses")
+                        .HasForeignKey("AnuncioId1");
+
+                    b.HasOne("Domain.Usuario.Usuario", "Usuario")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Domain.Usuario.Usuario", null)
+                        .WithMany("Interesses")
+                        .HasForeignKey("UsuarioId1");
 
                     b.Navigation("Anuncio");
 
@@ -230,16 +321,24 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Mensagem.Mensagem", b =>
                 {
                     b.HasOne("Domain.Anuncio.Anuncio", "Anuncio")
-                        .WithMany("Mensagens")
+                        .WithMany()
                         .HasForeignKey("AnuncioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Usuario.Usuario", "Usuario")
+                    b.HasOne("Domain.Anuncio.Anuncio", null)
                         .WithMany("Mensagens")
+                        .HasForeignKey("AnuncioId1");
+
+                    b.HasOne("Domain.Usuario.Usuario", "Usuario")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Domain.Usuario.Usuario", null)
+                        .WithMany("Mensagens")
+                        .HasForeignKey("UsuarioId1");
 
                     b.Navigation("Anuncio");
 
@@ -253,6 +352,11 @@ namespace Data.Migrations
                     b.Navigation("Interesses");
 
                     b.Navigation("Mensagens");
+                });
+
+            modelBuilder.Entity("Domain.Categoria.Categoria", b =>
+                {
+                    b.Navigation("AnunciosCategorias");
                 });
 
             modelBuilder.Entity("Domain.Usuario.Usuario", b =>

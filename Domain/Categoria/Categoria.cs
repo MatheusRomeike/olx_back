@@ -12,7 +12,7 @@
         #endregion
 
         #region Relacionamentos
-        public virtual ICollection<AnuncioCategoria.AnuncioCategoria> AnunciosCategorias { get; set; }
+
         #endregion
     }
 }

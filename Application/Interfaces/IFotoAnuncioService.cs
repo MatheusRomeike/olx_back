@@ -9,7 +9,7 @@ namespace Application.Interfaces
 {
     public interface IFotoAnuncioService
     {
-        Task<bool> AddArchiveAsync(int anuncioId, IFormFile file);
+        Task<bool> AddArchiveAsync(int anuncioId, IFormFile file, int sequencia);
         Task<List<byte[]>> GetArchivesAsync(int anuncioId);
     }
 }

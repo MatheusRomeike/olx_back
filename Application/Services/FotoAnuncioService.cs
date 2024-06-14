@@ -52,8 +52,9 @@ namespace Application.Services
                         AnuncioId = anuncioId,
                         SequenciaFotoAnuncio = sequenciaFotoAnuncio
                     });
-
-                    return _unitOfWork.EFCommit();
+                    // transaction.Commit();
+                    _unitOfWork.EFCommit();
+                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -61,12 +62,9 @@ namespace Application.Services
                     await _amazonS3Service.DeleteFileAsync(key);
                     throw new Exception($"Erro ao salvar foto do anúncio. {ex.Message}");
                 }
-                finally
-                {
-                    transaction.Dispose();
-                }
             }
         }
+
 
         public async Task<List<byte[]>> GetArchivesAsync(int anuncioId)
         {

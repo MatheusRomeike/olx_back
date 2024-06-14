@@ -59,11 +59,12 @@ namespace Application.Services
         public virtual IEnumerable<T> LoadAll(
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             int? limit = null,
             int? skip = null,
             Expression<Func<T, T>>? selector = null)
         {
-            return _repository.LoadAll(predicate, include, limit, skip, selector);
+            return _repository.LoadAll(predicate,  include, orderBy, limit, skip, selector);
         }
 
         public void PartialUpdate(T entity, params Expression<Func<T, object>>[] properties)

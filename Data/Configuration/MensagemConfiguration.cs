@@ -10,15 +10,16 @@ namespace Data.Configuration
         {
             builder.HasKey(i => new { i.UsuarioId, i.AnuncioId, i.SequenciaMensagem });
 
+            builder.Property(x => x.UsuarioAutorId).IsRequired();
             builder.Property(x => x.UsuarioId).IsRequired();
             builder.Property(x => x.AnuncioId).IsRequired();
             builder.Property(x => x.SequenciaMensagem).ValueGeneratedOnAdd().IsRequired();
             builder.Property(x => x.Texto).IsRequired().HasMaxLength(128);
             builder.Property(x => x.DataCriacao).IsRequired();
 
-            builder.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId);
+            builder.HasOne(x => x.Usuario).WithMany(x => x.Mensagens).HasForeignKey(x => x.UsuarioId);
 
-            builder.HasOne(x => x.Anuncio).WithMany().HasForeignKey(x => x.AnuncioId);
+            builder.HasOne(x => x.Anuncio).WithMany(x => x.Mensagens).HasForeignKey(x => x.AnuncioId);
         }
     }
 }

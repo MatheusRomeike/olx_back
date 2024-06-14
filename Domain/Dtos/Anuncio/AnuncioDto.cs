@@ -1,25 +1,24 @@
 ﻿using Domain.Anuncio.Enums;
-using Microsoft.AspNetCore.Http;
+using Domain.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.ViewModels
+namespace Domain.Dtos.Anuncio
 {
-    public class AnuncioViewModel
+    public class AnuncioDto
     {
-        public int? AnuncioId { get; set; }
+        public int AnuncioId { get; set; }
         public int UsuarioId { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }
         public decimal Preco { get; set; }
         public EstadoAnuncio EstadoAnuncio { get; set; }
         public DateTime DataCriacao { get; set; }
-        public IFormFile? Foto1 { get; set; }
-        public IFormFile? Foto2 { get; set; }
-        public IFormFile? Foto3 { get; set; }
-        public IFormFile? Foto4 { get; set; }
+
+        public List<string> Fotos { get; set; } 
+        public Domain.Usuario.Usuario Usuario { get; set; }
     }
 }

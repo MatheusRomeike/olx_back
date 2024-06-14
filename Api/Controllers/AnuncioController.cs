@@ -2,6 +2,7 @@
 using Application.Services;
 using Application.ViewModels;
 using Domain.Dtos.Anuncio;
+using Domain.Dtos.Usuario;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,10 +29,11 @@ namespace Api.Controllers
         #region Métodos
         [HttpPost("Add")]
         [Authorize]
-        public IActionResult Add([FromBody] AnuncioViewModel model)
+        public IActionResult Add([FromForm] AnuncioViewModel model)
         {
             try
             {
+                model.UsuarioId = UsuarioId;
                 _anuncioService.Add(model);
                 return Ok(true);
             }
@@ -56,13 +58,47 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("LoadById")]
+
+        [HttpGet("List")]
         [Authorize]
-        public IActionResult LoadById(int anuncioId)
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> List([FromQuery] FiltrarAnuncioViewModel model)
         {
             try
             {
-                var anuncio = _anuncioService.LoadById(anuncioId);
+                var anuncios = await _anuncioService.List(model);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetTituloAnuncio")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> GetTituloAnuncio(int anuncioId)
+        {
+            try
+            {
+                var anuncios = _anuncioService.GetTituloAnuncio(anuncioId);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("LoadById")]
+        [Authorize]
+        [ProducesResponseType(typeof(AnuncioDto), 200)]
+        public async Task<IActionResult> LoadById(int anuncioId)
+        {
+            try
+            {
+                var anuncio = await _anuncioService.LoadByIdAsync(anuncioId, UsuarioId);
                 return Ok(anuncio);
             }
             catch (Exception ex)
@@ -99,6 +135,22 @@ namespace Api.Controllers
             {
 
                 return Ok(_anuncioService.RelatorioVendasAnuncio(model, UsuarioId));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("LoadByUsuario")]
+        [Authorize]
+        public IActionResult LoadByUsuario()
+        {
+            try
+            {
+                var anuncio = _anuncioService.LoadByUsuario(UsuarioId);
+                return Ok(anuncio);
             }
             catch (Exception ex)
             {

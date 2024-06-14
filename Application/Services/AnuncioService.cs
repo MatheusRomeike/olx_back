@@ -113,7 +113,7 @@ namespace Application.Services
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.UsuarioId != usuarioId, () => true);
 
-            var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy);
+            var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy, include: i => i.Include(x => x.Usuario));
 
             if (anuncios == null || anuncios.Count() == 0)
                 return anunciosDto;
@@ -132,6 +132,8 @@ namespace Application.Services
                         "https://olx-bucket-free.s3.amazonaws.com/adimages/0/1",
                         //$"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncio.AnuncioId}/1"
                     },
+                    Usuario = anuncio.Usuario,
+                    DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null
                 });
             }
 

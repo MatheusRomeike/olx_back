@@ -34,18 +34,15 @@ namespace Application.Services
             var key = $"adimages/{anuncioId}/{sequencia}";
             try
             {
-
-                var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
-
-                if (!uploadFile)
-                    throw new Exception("Erro ao fazer upload do arquivo.");
-
                 // Verificar e desanexar entidade existente
                 var existingEntity = await _fotoAnuncioRepository.FindAsync(anuncioId, sequencia);
                 if (existingEntity != null)
                 {
-                    _fotoAnuncioRepository.Detach(existingEntity);
+                    _fotoAnuncioRepository.Delete(existingEntity);
+                   await  _amazonS3Service.DeleteFilesAsync([key]);
                 }
+
+                var uploadFile = await _amazonS3Service.UploadFileAsync(key, file);
 
                 _fotoAnuncioRepository.Add(new Domain.FotoAnuncio.FotoAnuncio()
                 {

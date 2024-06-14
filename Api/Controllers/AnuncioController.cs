@@ -69,6 +69,39 @@ namespace Api.Controllers
             }
         }
 
+
+        [HttpGet("List")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> List([FromQuery] FiltrarAnuncioViewModel model)
+        {
+            try
+            {
+                var anuncios = await _anuncioService.List(model);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetTituloAnuncio")]
+        [Authorize]
+        [ProducesResponseType(typeof(IEnumerable<AnuncioDto>), 200)]
+        public async Task<IActionResult> GetTituloAnuncio(int anuncioId)
+        {
+            try
+            {
+                var anuncios = _anuncioService.GetTituloAnuncio(anuncioId);
+                return Ok(anuncios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Método responsável por carregar um anúncio a partir do seu Id.
         /// </summary>

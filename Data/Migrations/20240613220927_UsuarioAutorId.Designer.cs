@@ -3,6 +3,7 @@ using System;
 using Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240613220927_UsuarioAutorId")]
+    partial class UsuarioAutorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,6 @@ namespace Data.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AnuncioId"));
-
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp without time zone");
@@ -60,6 +60,26 @@ namespace Data.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Anuncio");
+                });
+
+            modelBuilder.Entity("Domain.AnuncioCategoria.AnuncioCategoria", b =>
+                {
+                    b.Property<int>("AnuncioId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CategoriaId1")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AnuncioId", "CategoriaId");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("CategoriaId1");
+
+                    b.ToTable("AnuncioCategoria");
                 });
 
             modelBuilder.Entity("Domain.Categoria.Categoria", b =>
@@ -151,14 +171,6 @@ namespace Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UsuarioId"));
 
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("DataNascimento")
                         .IsRequired()
                         .HasColumnType("text");
@@ -195,6 +207,31 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Domain.AnuncioCategoria.AnuncioCategoria", b =>
+                {
+                    b.HasOne("Domain.Anuncio.Anuncio", "Anuncio")
+                        .WithMany("AnuncioCategorias")
+                        .HasForeignKey("AnuncioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Categoria.Categoria", null)
+                        .WithMany("AnunciosCategorias")
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Categoria.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Anuncio");
+
+                    b.Navigation("Categoria");
                 });
 
             modelBuilder.Entity("Domain.FotoAnuncio.FotoAnuncio", b =>
@@ -248,11 +285,18 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Domain.Anuncio.Anuncio", b =>
                 {
+                    b.Navigation("AnuncioCategorias");
+
                     b.Navigation("FotosAnuncio");
 
                     b.Navigation("Interesses");
 
                     b.Navigation("Mensagens");
+                });
+
+            modelBuilder.Entity("Domain.Categoria.Categoria", b =>
+                {
+                    b.Navigation("AnunciosCategorias");
                 });
 
             modelBuilder.Entity("Domain.Usuario.Usuario", b =>

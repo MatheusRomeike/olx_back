@@ -18,6 +18,7 @@ using Data.Contracts;
 using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 #region Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -28,7 +29,7 @@ AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 #if DEBUG
 DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env.local"));
 #else
-    DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+DotNetEnv.Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 #endif
 
 #endregion
@@ -42,6 +43,7 @@ ConfigureServices(builder.Services);
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -79,6 +81,8 @@ builder.Services.AddSwaggerGen(c =>
                 new string[] {}
             }
         });
+
+
 });
 
 #region Token JWT
@@ -174,5 +178,6 @@ void ConfigureServices(IServiceCollection services)
     services.AddScoped<IFotoAnuncioService, FotoAnuncioService>();
     builder.Services.AddScoped<IAnuncioService, AnuncioService>();
     builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+    builder.Services.AddScoped<IMensagemService, MensagemService>();
     #endregion
 }

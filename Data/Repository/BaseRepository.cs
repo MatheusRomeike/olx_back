@@ -9,7 +9,7 @@ namespace Data.Repository
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         #region Atributos
-        private readonly DataContext context;
+        public DataContext context;
         #endregion
 
         #region Construtor
@@ -76,11 +76,12 @@ namespace Data.Repository
         public virtual IEnumerable<T> LoadAll(
             Expression<Func<T, bool>>? predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
             int? limit = null,
             int? skip = null,
             Expression<Func<T, T>>? selector = null)
         {
-            var query = GetQuery(predicate: predicate, limit: limit, include: include, selector: selector);
+            var query = GetQuery(predicate: predicate, orderBy: orderBy, limit: limit, include: include, selector: selector);
             return query.ToList();
         }
 
@@ -94,6 +95,9 @@ namespace Data.Repository
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
 
+            if (orderBy != null)
+                query = orderBy(query);
+
             if (predicate != null)
                 query = query.Where(predicate);
 
@@ -102,9 +106,6 @@ namespace Data.Repository
 
             if (skip != null)
                 query = query.Skip(skip.Value);
-
-            if (orderBy != null)
-                query = orderBy(query);
 
             if (include != null)
             {

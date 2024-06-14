@@ -77,7 +77,9 @@ namespace Application.Services
                 var authenticationResult = new TokenDto
                 {
                     AccessToken = token.Value,
-                    ExpiresIn = 3600
+                    ExpiresIn = 3600,
+                    NomeUsuario = usuario.Nome,
+                    UsuarioId = usuario.UsuarioId
                 };
 
                 return authenticationResult;

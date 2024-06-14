@@ -3,6 +3,7 @@
     public class Mensagem
     {
         #region Atributos
+        public int UsuarioAutorId { get; set; }
         public int UsuarioId { get; set; }
         public int AnuncioId { get; set; }
         public int SequenciaMensagem { get; set; }
@@ -13,7 +14,7 @@
         #region Construtores
         public Mensagem()
         {
-            DataCriacao = DateTime.Now;
+
         }
         #endregion
 

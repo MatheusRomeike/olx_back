@@ -10,6 +10,7 @@ namespace Data.Configuration
         {
             builder.HasKey(i => new { i.UsuarioId, i.AnuncioId, i.SequenciaMensagem });
 
+            builder.Property(x => x.UsuarioAutorId).IsRequired();
             builder.Property(x => x.UsuarioId).IsRequired();
             builder.Property(x => x.AnuncioId).IsRequired();
             builder.Property(x => x.SequenciaMensagem).ValueGeneratedOnAdd().IsRequired();

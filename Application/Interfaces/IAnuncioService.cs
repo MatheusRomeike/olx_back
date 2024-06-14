@@ -21,11 +21,14 @@ namespace Application.Interfaces
 
         List<RelatorioVendasDto> RelatorioVendasAnuncio(RelatorioVendasViewModel model, int usuarioId);
 
+        Task<IEnumerable<AnuncioDto>> List(FiltrarAnuncioViewModel model);
+
         List<Anuncio> LoadByUsuario(int usuarioId);
         List<CategoriaDto> LoadCategorias();
         Task InserirFotoAsync(AnuncioViewModel anuncioViewModel);
 
 
+        string GetTituloAnuncio(int anuncioId);
 
     }
 }

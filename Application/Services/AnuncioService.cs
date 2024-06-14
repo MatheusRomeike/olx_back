@@ -21,6 +21,7 @@ using Domain.Dtos.Categoria;
 using Domain.Categoria;
 using System.Linq.Expressions;
 using Data.Repository;
+using Domain.Interesse.Contracts;
 
 namespace Application.Services
 {
@@ -33,11 +34,12 @@ namespace Application.Services
         private readonly IFotoAnuncioRepository _fotoAnuncioRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ICategoriaRepository _categoriaRepository;
+        private readonly IInteresseRepository _interesseRepository;
 
         #endregion
 
         #region Construtor
-        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository, ICategoriaRepository categoriaRepository)
+        public AnuncioService(IAnuncioRepository anuncioRepository, IFotoAnuncioService fotoAnuncioService, IAmazonS3Service amazonS3Service, IFotoAnuncioRepository fotoAnuncioRepository, IUsuarioRepository usuarioRepository, ICategoriaRepository categoriaRepository, IInteresseRepository interesseRepository)
         {
             _anuncioRepository = anuncioRepository;
             _fotoAnuncioService = fotoAnuncioService;
@@ -45,6 +47,7 @@ namespace Application.Services
             _fotoAnuncioRepository = fotoAnuncioRepository;
             _usuarioRepository = usuarioRepository;
             _categoriaRepository = categoriaRepository;
+            _interesseRepository = interesseRepository;
         }
         #endregion
 
@@ -113,7 +116,11 @@ namespace Application.Services
             predicate = AndAlsoWhen(predicate, x => x.Preco <= model.PrecoMax, () => model.PrecoMax.HasValue);
             predicate = AndAlsoWhen(predicate, x => x.UsuarioId != usuarioId, () => true);
 
-            var anuncios = _anuncioRepository.LoadAll(predicate: predicate, orderBy: orderBy, include: i => i.Include(x => x.Usuario));
+            var anuncios = _anuncioRepository.LoadAll(
+                predicate: predicate,
+                orderBy: orderBy,
+                include: i => i.Include(x => x.Usuario)
+                );
 
             if (anuncios == null || anuncios.Count() == 0)
                 return anunciosDto;
@@ -132,7 +139,7 @@ namespace Application.Services
                         $"https://olx-bucket-free.s3.amazonaws.com/adimages/{anuncio.AnuncioId}/1"
                     },
                     Usuario = anuncio.Usuario,
-                    DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null
+                    DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null,
                 });
             }
 
@@ -162,12 +169,14 @@ namespace Application.Services
             return baseCondition;
         }
 
-        public async Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId)
+        public async Task<AnuncioDto> LoadByIdAsync(int anuncioId, int usuarioId, int usuarioLogadoId)
         {
 
             var anuncio = _anuncioRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioId, include: j => j.Include(u => u.Usuario));
             if (anuncio == null)
                 throw new Exception("Anúncio não encontrado.");
+
+            var interesse = _interesseRepository.LoadFirstBy(x => x.AnuncioId == anuncioId && x.UsuarioId == usuarioLogadoId);
 
             var retorno = new AnuncioDto()
             {
@@ -182,6 +191,7 @@ namespace Application.Services
                 Usuario = anuncio.Usuario,
                 DescricaoCategoria = anuncio.CategoriaId != 0 ? _categoriaRepository.LoadFirstBy(x => x.CategoriaId == anuncio.CategoriaId).Descricao : null,
                 CategoriaId = anuncio.CategoriaId,
+                Interesse = interesse != null,
             };
 
             anuncio.FotosAnuncio = _fotoAnuncioRepository.LoadAll(x => x.AnuncioId == anuncioId).ToList();

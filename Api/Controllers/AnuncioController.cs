@@ -212,12 +212,12 @@ namespace Api.Controllers
         /// <returns></returns>
         [HttpPost("AddFotos")]
         [Authorize]
-        public IActionResult AddFotos([FromForm] AnuncioViewModel model)
+        public async Task<IActionResult> AddFotos([FromForm] AnuncioViewModel model)
         {
             try
             {
                 model.UsuarioId = UsuarioId;
-                _anuncioService.InserirFotoAsync(model);
+                await _anuncioService.InserirFotoAsync(model);
                 return Ok(true);
             }
             catch (Exception ex)
